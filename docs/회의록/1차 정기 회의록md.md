@@ -6,8 +6,6 @@
 
 회의 상태: 회의 완료
 
-중요: 중요
-
 # 개요
 
 - **참석자**: 이해강, 문진서, 이준영, 안선주, 김동인
@@ -21,21 +19,12 @@
 1. **목표 설정**
 2. **주차별 계획 세우기**
 3. **핵심 기능 리마인드**
-- https://www.figma.com/board/VF0RB1mV2PwWJTiHm36el3/%EC%95%84%EC%9D%B4%EB%94%94%EC%96%B4%ED%86%A4-FigJam-(2%ED%8C%80)?node-id=0-1&t=yrM5yvAubmuedhsd-1
-- https://www.figma.com/design/xHuOTnKj6p9VqN8X3ptMiZ/NAMU---GREEN?node-id=0-1&node-type=canvas&t=xZIkG3eFmyd6ZeP2-0
-
-👉 정기회의는 그간 한 일의 리뷰와 앞으로의 일정/추진 계획을 포함합니다.
+  - (아이디어 피그마 링크)[https://www.figma.com/board/VF0RB1mV2PwWJTiHm36el3/%EC%95%84%EC%9D%B4%EB%94%94%EC%96%B4%ED%86%A4-FigJam-(2%ED%8C%80)?node-id=0-1&t=yrM5yvAubmuedhsd-1]
+  - (프로젝트 디자인 피그마 링크)[https://www.figma.com/design/xHuOTnKj6p9VqN8X3ptMiZ/NAMU---GREEN?node-id=0-1&node-type=canvas&t=xZIkG3eFmyd6ZeP2-0]
 
 # 내용
 
-<aside>
-💡 안건에 대한 논의 내용을 정리합니다.
-
-</aside>
-
-피그잼 참고!
-
-![스크린샷 2024-10-24 오후 7.07.28.png](1%E1%84%8E%E1%85%A1%20%E1%84%8C%E1%85%A5%E1%86%BC%E1%84%80%E1%85%B5%20%E1%84%92%E1%85%AC%E1%84%8B%E1%85%B4%204a4ea37e25cb475684e1a4afdf33ba9f/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-10-24_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_7.07.28.png)
+피그마 참고!
 
 ## 프로젝트 계획
 
