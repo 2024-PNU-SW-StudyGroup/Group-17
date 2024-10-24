@@ -1,17 +1,12 @@
 # 1차 정기 회의
 
 회의 일시: 2024년 9월 19일
+
 회의 유형: 정기 회의
+
 회의 상태: 회의 완료
+
 중요: 중요
-
-<aside>
-<img src="https://www.notion.so/icons/list_orange.svg" alt="https://www.notion.so/icons/list_orange.svg" width="40px" /> **회의 체크리스트**
-
-- [ ]  진행 전 모든 참석 인원은 본 회의록에 접속합니다.
-- [ ]  진행 중 각자의 의견, 발언을 각자가 회의록에 주도적으로 정리합니다.
-- [ ]  진행 후 할 일과 담당자, 기한을 **반드시** 정리합니다.
-</aside>
 
 # 개요
 
@@ -20,12 +15,6 @@
 - **장소**: 컴포즈 부산대점
 
 # 안건
-
-<aside>
-💡 회의 때 다룰 내용을 미리 적어 공유합니다.
-다룰 내용이 없다면 회의는 하지 않아요.
-
-</aside>
 
 1. **2024 PNU SW 스터디 그룹 깃허브 팀원 등록** 
 - [https://github.com/2024-PNU-SW-StudyGroup/StarterTemplate](https://github.com/2024-PNU-SW-StudyGroup/StarterTemplate)
@@ -59,12 +48,6 @@
 | **1월** | 서비스 테스트 및 시장 반응 검토 **/ 데모데이**  |
 
 # 할일
-
-<aside>
-💡 안건을 논의한 결과 후속 조치와 
-다음 회의까지 해야할 일을 정합니다. (담당자와 기한 명시)
-
-</aside>
 
 | 할일 | **담당자** | **기한** |
 | --- | --- | --- |
