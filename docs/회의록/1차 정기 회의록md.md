@@ -15,13 +15,13 @@
 # 안건
 
 1. **2024 PNU SW 스터디 그룹 깃허브 팀원 등록** 
-- [팀원등록링크](https://github.com/2024-PNU-SW-StudyGroup/StarterTemplate)
-1. **목표 설정**
-2. **주차별 계획 세우기**
-3. **핵심 기능 리마인드**
+  - [팀원등록링크](https://github.com/2024-PNU-SW-StudyGroup/StarterTemplate)
+2. **목표 설정**
+3. **주차별 계획 세우기**
+4. **핵심 기능 리마인드**
   - [아이디어 피그마 링크](https://www.figma.com/board/VF0RB1mV2PwWJTiHm36el3/%EC%95%84%EC%9D%B4%EB%94%94%EC%96%B4%ED%86%A4-FigJam-(2%ED%8C%80)?node-id=0-1&t=yrM5yvAubmuedhsd-1)
   - [아이디어 피그마 링크](https://www.figma.com/design/xHuOTnKj6p9VqN8X3ptMiZ/NAMU---GREEN?node-id=0-1&node-type=canvas&t=xZIkG3eFmyd6ZeP2-0)
-  - 
+
 # 내용
 
 피그마 참고!
