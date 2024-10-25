@@ -1,4 +1,6 @@
-﻿CREATE TABLE "User" (
+﻿DROP TABLE "User";
+
+CREATE TABLE "User" (
 	"user_id"	bigint(20)		NOT NULL,
 	"password"	varchar(255)		NOT NULL,
 	"user_name"	varchar(100)		NOT NULL,
@@ -9,8 +11,6 @@
 	"eco_points"	int(100)	DEFAULT 0	NOT NULL,
 	"total_discount"	int(10)	DEFAULT 0	NOT NULL,
 	"role"	varchar(100)		NOT NULL,
-	"created_date"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
-	"modified_date"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
 	"user_status"	varchar(1)		NOT NULL
 );
 
@@ -26,6 +26,8 @@ COMMENT ON COLUMN "User"."role" IS '회원';
 
 COMMENT ON COLUMN "User"."user_status" IS 'Y: 활성화 회원, N: 탈퇴 회원';
 
+DROP TABLE "Store";
+
 CREATE TABLE "Store" (
 	"store_id"	bigint(20)		NOT NULL,
 	"store_name"	varchar(255)		NOT NULL,
@@ -36,9 +38,6 @@ CREATE TABLE "Store" (
 	"notice"	varchar(255)		NULL,
 	"store_content"	varchar(255)		NULL,
 	"pickup_time"	varchar(255)		NOT NULL,
-	"operation_hours"	varchar(255)		NULL,
-	"open_hour"	TIME		NOT NULL,
-	"close_hour"	TIME		NULL,
 	"closed_days"	varchar(255)		NULL,
 	"store_rating"	int(1)	DEFAULT 0	NOT NULL,
 	"favorite_count"	int(11)	DEFAULT 0	NOT NULL,
@@ -48,14 +47,11 @@ CREATE TABLE "Store" (
 	"company_address"	varchar(255)		NOT NULL,
 	"business_number"	varchar(12)		NOT NULL,
 	"country_of_origin"	varchar(255)		NULL,
-	"created_at"	TIMESTAMP	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
-	"updated_at"	TIMESTAMP	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
-	"status"	varchar(1)	DEFAULT Y	NOT NULL
+	"status"	varchar(1)	DEFAULT Y	NOT NULL,
+	"Field"	VARCHAR(255)		NULL
 );
 
 COMMENT ON COLUMN "Store"."pickup_time" IS '일단 19:00~22:00 형식으로 받는다고 생각함';
-
-COMMENT ON COLUMN "Store"."operation_hours" IS '월~일 별로 오픈, 마감시간을 따로 받아야 하나?';
 
 COMMENT ON COLUMN "Store"."store_rating" IS '1~5점';
 
@@ -69,9 +65,9 @@ COMMENT ON COLUMN "Store"."business_number" IS '이';
 
 COMMENT ON COLUMN "Store"."country_of_origin" IS '건?';
 
-COMMENT ON COLUMN "Store"."updated_at" IS '이후 수정 시간을 자동으로 갱신하려면 트리거 추가헤야 함';
-
 COMMENT ON COLUMN "Store"."status" IS 'Y: 활성화, N: 삭제';
+
+DROP TABLE "Menu";
 
 CREATE TABLE "Menu" (
 	"menu_id"	bigint(20)		NOT NULL,
@@ -80,26 +76,26 @@ CREATE TABLE "Menu" (
 	"menu_name"	varchar(255)		NOT NULL,
 	"menu_price"	int(11)		NOT NULL,
 	"menu_discount_price"	int(11)		NOT NULL,
-	"menu_picture"	text		NULL,
+	"menu_picture_url"	varchar(255)		NULL,
 	"popularity"	tinyint(1)	DEFAULT 0	NOT NULL,
-	"created_date"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
-	"modified_date"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
 	"status"	varchar(255)		NOT NULL
 );
 
 COMMENT ON COLUMN "Menu"."status" IS '판매 상태(판매 중, 품절 등)';
+
+DROP TABLE "MenuOption";
 
 CREATE TABLE "MenuOption" (
 	"menu_option_id"	bigint(20)		NOT NULL,
 	"menu_id"	bigint(20)		NOT NULL,
 	"menu_detail_name"	varchar(255)		NULL,
 	"menu_content"	varchar(255)		NULL,
-	"menu_pickup_time"	time		NULL,
-	"created_date"	timestmap	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
-	"modified_date"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL
+	"menu_pickup_time"	time		NULL
 );
 
 COMMENT ON COLUMN "MenuOption"."menu_pickup_time" IS 'type을 뭘로 해야 되지??';
+
+DROP TABLE "Order";
 
 CREATE TABLE "Order" (
 	"order_id"	bigint(20)		NOT NULL,
@@ -107,20 +103,18 @@ CREATE TABLE "Order" (
 	"order_time"	varchar(255)		NOT NULL,
 	"payment_method"	varchar(255)		NOT NULL,
 	"total_price"	int(11)		NOT NULL,
-	"create_date"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
-	"modified_date"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
 	"status"	varchar(255)		NOT NULL
 );
 
 COMMENT ON COLUMN "Order"."status" IS '주문 완료, 픽업 완료';
+
+DROP TABLE "Cart";
 
 CREATE TABLE "Cart" (
 	"cart_id"	bigint(20)		NOT NULL,
 	"user_id"	bigint(20)		NOT NULL,
 	"menu_id"	bigint(20)		NOT NULL,
 	"cart_quantity"	int(11)		NOT NULL,
-	"created_time"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
-	"modified_time"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
 	"status"	varchar(255)		NOT NULL
 );
 
@@ -128,16 +122,7 @@ COMMENT ON COLUMN "Cart"."cart_quantity" IS '장바구니에 담은 메뉴의 �
 
 COMMENT ON COLUMN "Cart"."status" IS '일반';
 
-CREATE TABLE "StoreImage" (
-	"store_image_id"	bigint(20)		NOT NULL,
-	"store_id"	bigint(20)		NOT NULL,
-	"store_picture_url"	text		NOT NULL,
-	"created_time"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
-	"modified_time"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
-	"status"	varchar(255)		NOT NULL
-);
-
-COMMENT ON COLUMN "StoreImage"."status" IS '일반';
+DROP TABLE "Review";
 
 CREATE TABLE "Review" (
 	"review_id"	bigint(20)		NOT NULL,
@@ -145,9 +130,7 @@ CREATE TABLE "Review" (
 	"store_id"	bigint(20)		NOT NULL,
 	"review_rating"	int(1)		NOT NULL,
 	"review_content"	varchar(255)		NULL,
-	"review_picture_url"	text		NULL,
-	"created_time"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
-	"modified_time"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
+	"review_picture_url"	varchar(255)		NULL,
 	"status"	varchar(255)		NOT NULL
 );
 
@@ -155,13 +138,15 @@ COMMENT ON COLUMN "Review"."review_rating" IS '1~5점';
 
 COMMENT ON COLUMN "Review"."status" IS '일반';
 
+DROP TABLE "Favorite";
+
 CREATE TABLE "Favorite" (
 	"user_id"	bigint(20)		NOT NULL,
 	"store_id"	bigint(20)		NOT NULL,
-	"created_time"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
-	"modified_time"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
 	"status"	varchar(1)		NOT NULL
 );
+
+DROP TABLE "Coupon";
 
 CREATE TABLE "Coupon" (
 	"coupon_id"	bigint(20)		NOT NULL,
@@ -176,27 +161,7 @@ CREATE TABLE "Coupon" (
 
 COMMENT ON COLUMN "Coupon"."status" IS 'Y: 가능, N: 기간 만료';
 
-CREATE TABLE "ReviewImage" (
-	"review_image_id"	bigint(20)		NOT NULL,
-	"review_id"	bigint(20)		NOT NULL,
-	"review_picture_url"	text		NOT NULL,
-	"created_time"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
-	"modified_time"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
-	"status"	varchar(255)		NOT NULL
-);
-
-COMMENT ON COLUMN "ReviewImage"."status" IS '일반';
-
-CREATE TABLE "MenuImage" (
-	"menu_image_id"	bigint(20)		NOT NULL,
-	"menu_id"	bigint(20)		NOT NULL,
-	"menu_picture_url"	text		NOT NULL,
-	"created_time"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
-	"modified_time"	timestamp	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
-	"status"	varchar(255)		NOT NULL
-);
-
-COMMENT ON COLUMN "MenuImage"."status" IS '일반';
+DROP TABLE "Order_Menu";
 
 CREATE TABLE "Order_Menu" (
 	"order_menu_id"	bigint(20)		NOT NULL,
@@ -215,6 +180,29 @@ COMMENT ON COLUMN "Order_Menu"."unit_price" IS '주문 당시 메뉴의 가격';
 COMMENT ON COLUMN "Order_Menu"."total_price" IS '주문 당시 총 가격';
 
 COMMENT ON COLUMN "Order_Menu"."options" IS '메뉴 옵션이 있을 경우';
+
+DROP TABLE "operation_hours";
+
+CREATE TABLE "operation_hours" (
+	"operation_id"	bigint9(20)		NOT NULL,
+	"store_id"	bigint(20)		NOT NULL,
+	"mon_open"	DATE		NULL,
+	"mon_close"	DATE		NULL,
+	"tue_open"	DATE		NULL,
+	"tue_close"	DATE		NULL,
+	"wed_open"	DATE		NULL,
+	"wed_close"	DATE		NULL,
+	"thu_open"	DATE		NULL,
+	"thu_close"	DATE		NULL,
+	"fri_open"	DATE		NULL,
+	"fri_close"	DATE		NULL,
+	"sat_open"	DATE		NULL,
+	"sat_close"	DATE		NULL,
+	"sun_open"	DATE		NULL,
+	"sun_close"	DATE		NULL
+);
+
+COMMENT ON COLUMN "operation_hours"."mon_open" IS '입력 안 하면 휴무일로 간주';
 
 ALTER TABLE "User" ADD CONSTRAINT "PK_USER" PRIMARY KEY (
 	"user_id"
@@ -240,10 +228,6 @@ ALTER TABLE "Cart" ADD CONSTRAINT "PK_CART" PRIMARY KEY (
 	"cart_id"
 );
 
-ALTER TABLE "StoreImage" ADD CONSTRAINT "PK_STOREIMAGE" PRIMARY KEY (
-	"store_image_id"
-);
-
 ALTER TABLE "Review" ADD CONSTRAINT "PK_REVIEW" PRIMARY KEY (
 	"review_id"
 );
@@ -252,15 +236,95 @@ ALTER TABLE "Coupon" ADD CONSTRAINT "PK_COUPON" PRIMARY KEY (
 	"coupon_id"
 );
 
-ALTER TABLE "ReviewImage" ADD CONSTRAINT "PK_REVIEWIMAGE" PRIMARY KEY (
-	"review_image_id"
-);
-
-ALTER TABLE "MenuImage" ADD CONSTRAINT "PK_MENUIMAGE" PRIMARY KEY (
-	"menu_image_id"
-);
-
 ALTER TABLE "Order_Menu" ADD CONSTRAINT "PK_ORDER_MENU" PRIMARY KEY (
 	"order_menu_id"
+);
+
+ALTER TABLE "operation_hours" ADD CONSTRAINT "PK_OPERATION_HOURS" PRIMARY KEY (
+	"operation_id"
+);
+
+ALTER TABLE "Menu" ADD CONSTRAINT "FK_Store_TO_Menu_1" FOREIGN KEY (
+	"store_id"
+)
+REFERENCES "Store" (
+	"store_id"
+);
+
+ALTER TABLE "MenuOption" ADD CONSTRAINT "FK_Menu_TO_MenuOption_1" FOREIGN KEY (
+	"menu_id"
+)
+REFERENCES "Menu" (
+	"menu_id"
+);
+
+ALTER TABLE "Order" ADD CONSTRAINT "FK_User_TO_Order_1" FOREIGN KEY (
+	"user_id"
+)
+REFERENCES "User" (
+	"user_id"
+);
+
+ALTER TABLE "Cart" ADD CONSTRAINT "FK_User_TO_Cart_1" FOREIGN KEY (
+	"user_id"
+)
+REFERENCES "User" (
+	"user_id"
+);
+
+ALTER TABLE "Cart" ADD CONSTRAINT "FK_Menu_TO_Cart_1" FOREIGN KEY (
+	"menu_id"
+)
+REFERENCES "Menu" (
+	"menu_id"
+);
+
+ALTER TABLE "Review" ADD CONSTRAINT "FK_User_TO_Review_1" FOREIGN KEY (
+	"user_id"
+)
+REFERENCES "User" (
+	"user_id"
+);
+
+ALTER TABLE "Review" ADD CONSTRAINT "FK_Store_TO_Review_1" FOREIGN KEY (
+	"store_id"
+)
+REFERENCES "Store" (
+	"store_id"
+);
+
+ALTER TABLE "Favorite" ADD CONSTRAINT "FK_User_TO_Favorite_1" FOREIGN KEY (
+	"user_id"
+)
+REFERENCES "User" (
+	"user_id"
+);
+
+ALTER TABLE "Favorite" ADD CONSTRAINT "FK_Store_TO_Favorite_1" FOREIGN KEY (
+	"store_id"
+)
+REFERENCES "Store" (
+	"store_id"
+);
+
+ALTER TABLE "Order_Menu" ADD CONSTRAINT "FK_Order_TO_Order_Menu_1" FOREIGN KEY (
+	"order_id"
+)
+REFERENCES "Order" (
+	"order_id"
+);
+
+ALTER TABLE "Order_Menu" ADD CONSTRAINT "FK_Menu_TO_Order_Menu_1" FOREIGN KEY (
+	"menu_id2"
+)
+REFERENCES "Menu" (
+	"menu_id"
+);
+
+ALTER TABLE "operation_hours" ADD CONSTRAINT "FK_Store_TO_operation_hours_1" FOREIGN KEY (
+	"store_id"
+)
+REFERENCES "Store" (
+	"store_id"
 );
 
