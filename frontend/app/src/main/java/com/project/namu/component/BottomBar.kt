@@ -1,6 +1,7 @@
 package com.project.namu.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,9 +29,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Divider
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.project.namu.ui.theme.GrayLine
 import com.project.namu.ui.theme.Main100
 import com.project.namu.ui.theme.Main200
 
@@ -41,10 +44,20 @@ fun BottomNav(
     selectedIndex: Int,
     onItemSelected: (Int) -> Unit
 ) {
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White),
+        ) {
+        Divider(color = GrayLine, thickness = 2.dp)  // 하단에 회색 구분선 추가
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
+
         ) {
             Spacer(modifier = Modifier.weight(1f))
             BottomIcon(
@@ -144,7 +157,8 @@ fun BottomIcon(
 @Composable
 fun BottomBarPreview() {
     val navController = rememberNavController()
-    BottomNav(navController = navController, selectedIndex = 1) {
-        
+
+    BottomNav(navController = navController, selectedIndex = 0) {
+
     }
 }
