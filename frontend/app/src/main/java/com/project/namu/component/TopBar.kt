@@ -105,7 +105,9 @@ fun SearchTopBar(onSearch: (String) -> Unit) {
                             color = Color.Black,
                             fontSize = 14.sp
                         ),
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .align(Alignment.CenterStart)
                     )
 
                     // 플레이스홀더 텍스트 표시
