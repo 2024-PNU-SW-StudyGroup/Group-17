@@ -200,7 +200,7 @@ fun CafeCardWithDetails() {
         colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier
             .fillMaxWidth()
-            .height(180.dp) // 기본 높이 설정
+            .height(165.dp) // 기본 높이 설정
     ) {
         Row(
             modifier = Modifier.fillMaxSize()
@@ -260,11 +260,9 @@ fun CafeCardWithDetails() {
                 Spacer(modifier = Modifier.height(4.dp))
 
                 // 평점, 시간, 거리 정보
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                Column(
                     modifier = Modifier.fillMaxWidth()
-                ) {
+                ){
                     // 평점 정보
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
@@ -277,32 +275,34 @@ fun CafeCardWithDetails() {
                         Text(text = "4.5 (100+)", fontSize = 12.sp, color = Color.Black)
                     }
 
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                    // 시간 정보
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.card_clock),
-                            contentDescription = "Time",
-                            tint = Color(0xFF00BCD4),
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(text = "19:00 ~ 21:00", fontSize = 12.sp, color = Color.Gray)
-                    }
+                    Row() {
+                        // 시간 정보
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.card_clock),
+                                contentDescription = "Time",
+                                tint = Color(0xFF00BCD4),
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(text = "19:00 ~ 21:00", fontSize = 12.sp, color = Color.Gray)
+                        }
 
-                    Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
 
-                    // 거리 정보
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.card_location),
-                            contentDescription = "Location",
-                            tint = Color(0xFF00BCD4),
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(text = "1.9km", fontSize = 12.sp, color = Color.Gray)
+                        // 거리 정보
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.card_location),
+                                contentDescription = "Location",
+                                tint = Color(0xFF00BCD4),
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(text = "1.9km", fontSize = 12.sp, color = Color.Gray)
+                        }
                     }
                 }
             }
