@@ -95,7 +95,16 @@ fun Search_listContent() {
         verticalArrangement = Arrangement.spacedBy(16.dp),
 
     ){
+        item { Spacer(modifier = Modifier.height(4.dp)) }
+
         item { CafeCardWithDetails() }
+
+        item { CafeCardWithDetails() }
+
+        item { CafeCardWithDetails() }
+
+        item { CafeCardWithDetails() }
+
     }
 }
 
@@ -129,7 +138,7 @@ fun SortButton() {
     Row(
         modifier = Modifier
             .border(1.dp, Color.LightGray, RoundedCornerShape(10.dp)) // 테두리 추가
-            .padding(start = 12.dp, end =8.dp)
+            .padding(start = 12.dp, end = 8.dp)
             .padding(vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -191,8 +200,7 @@ fun CafeCardWithDetails() {
         colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp) // 기본 높이 설정
-            .padding(vertical = 16.dp)
+            .height(180.dp) // 기본 높이 설정
     ) {
         Row(
             modifier = Modifier.fillMaxSize()
@@ -200,7 +208,7 @@ fun CafeCardWithDetails() {
             // 왼쪽 이미지 섹션
             Box(
                 modifier = Modifier
-                    .width(100.dp)
+                    .width(120.dp)
                     .fillMaxHeight()
                     .background(Color.Gray)
             ) {
