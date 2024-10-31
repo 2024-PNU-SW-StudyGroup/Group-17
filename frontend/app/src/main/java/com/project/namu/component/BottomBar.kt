@@ -36,6 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import com.project.namu.ui.theme.GrayLine
 import com.project.namu.ui.theme.Main100
 import com.project.namu.ui.theme.Main200
+import com.project.namu.ui.theme.Main300
 
 
 @Composable
@@ -135,7 +136,7 @@ fun BottomIcon(
                 colorFilter = if (selected) {
                     ColorFilter.tint(Main100)
                 } else {
-                    ColorFilter.tint(Main200)
+                    ColorFilter.tint(Main300)
                 }
             )
 
@@ -145,7 +146,7 @@ fun BottomIcon(
                     fontSize = 12.sp,
                     lineHeight = 16.sp,
                     fontWeight = FontWeight(400),
-                    color = if (selected) Main100 else Main200,
+                    color = if (selected) Main100 else Main300,
                     textAlign = TextAlign.Center,
                 )
             )
