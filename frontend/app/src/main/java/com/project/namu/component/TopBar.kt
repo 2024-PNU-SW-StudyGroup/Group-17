@@ -21,7 +21,11 @@ import com.project.namu.R
 import com.project.namu.ui.theme.GrayLine
 
 @Composable
-fun SearchTopBar(onSearch: (String) -> Unit) {
+fun SearchTopBar(
+    onSearch: (String) -> Unit,
+    additionalContent: @Composable (() -> Unit)? = null, // 동적으로 추가될 콘텐츠
+    notificationVisible: Boolean = true // 알림 아이콘 표시 여부를 결정하는 매개변수
+) {
     var searchText by remember { mutableStateOf("") } // 검색어 상태
     Column {
         Column(
@@ -29,7 +33,7 @@ fun SearchTopBar(onSearch: (String) -> Unit) {
                 .fillMaxWidth()
                 .background(Color.White)
                 .padding(horizontal = 20.dp)
-                .padding(top = 32.dp, bottom = 20.dp)
+                .padding(top = 32.dp)
         ) {
             // 첫 번째 Row: 위치와 알림 아이콘
             Row(
@@ -62,13 +66,14 @@ fun SearchTopBar(onSearch: (String) -> Unit) {
                         modifier = Modifier.size(14.dp) // 원하는 크기로 조정 (예: 24.dp)
                     )
                 }
-
-                Icon(
-                    painter = painterResource(id = R.drawable.notification), // 알림 아이콘
-                    contentDescription = "Notification Icon",
-                    tint = Color.Black,
-                    modifier = Modifier.size(24.dp) // 원하는 크기로 조정 (예: 24.dp)
-                )
+                if (notificationVisible) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.notification), // 알림 아이콘
+                        contentDescription = "Notification Icon",
+                        tint = Color.Black,
+                        modifier = Modifier.size(24.dp) // 원하는 크기로 조정 (예: 24.dp)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -131,6 +136,12 @@ fun SearchTopBar(onSearch: (String) -> Unit) {
                 onSearch(searchText)
             }
         }
+
+        // 추가 콘텐츠 삽입
+        additionalContent?.let {
+            it() // 추가 콘텐츠가 있으면 렌더링
+        }
+
         Divider(color = GrayLine, thickness = 2.dp)  // 하단에 회색 구분선 추가
     }
 

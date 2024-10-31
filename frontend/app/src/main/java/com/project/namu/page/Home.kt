@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
@@ -57,12 +58,17 @@ fun HomeScreen(navController: NavController) {
 
     Scaffold(
         topBar = {
-            SearchTopBar {}
+            SearchTopBar(
+                onSearch = {},
+                additionalContent = {
+                    Spacer(modifier = Modifier.height(20.dp)) // 원하는 높이로 Spacer 추가
+                },
+                notificationVisible = true // 여기서 알림 아이콘 표시 여부를 결정
+            )
         },
 
         bottomBar = {
 
-            // 하단 아이콘들 배치
             BottomNav(
                 navController = navController,
                 selectedIndex = selectedIndex,
@@ -119,6 +125,7 @@ fun HomeContent() {
     }
 }
 
+// 카테고리 카드 Row
 @Composable
 fun FoodCategoryRow() {
     Box(
@@ -142,21 +149,21 @@ fun FoodCategoryRow() {
     }
 }
 
+// 카테고리 카드 하나
 @Composable
 fun CategoryCard(name: String, icon: Int) {
     Card(
         modifier = Modifier
             .width(66.dp) // 카드의 너비 설정
             .height(76.dp) // 카드의 높이 설정
-            .border(1.dp, Color.Gray, RoundedCornerShape(12.dp)), // 테두리 추가
+            .border(1.dp, Color.LightGray, RoundedCornerShape(12.dp)), // 테두리 추가
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         ),
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(4.dp),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -168,10 +175,12 @@ fun CategoryCard(name: String, icon: Int) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = name, fontSize = 11.sp, color = Color.Black)
+
         }
     }
 }
 
+// 더보기와 카드의 horizontal Row
 @Composable
 fun HorizantalCard(text : String) {
     val scrollState = rememberScrollState()
@@ -212,6 +221,8 @@ fun HorizantalCard(text : String) {
 
 @Composable
 fun CafeCard(){
+    val isFavorite by remember { mutableStateOf(false) } // 좋아요 상태를 저장
+
     //카페 카드
     Card(
         shape = RoundedCornerShape(16.dp),
@@ -229,7 +240,7 @@ fun CafeCard(){
             ) {
                 // 좋아요 아이콘을 오른쪽 상단에 배치
                 Icon(
-                    imageVector = Icons.Default.FavoriteBorder, // 아이콘 리소스를 ic_heart로 변경
+                    imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                     contentDescription = "Like",
                     tint = Color.White,
                     modifier = Modifier
