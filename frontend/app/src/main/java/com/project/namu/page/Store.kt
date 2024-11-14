@@ -40,6 +40,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,6 +51,7 @@ import com.project.namu.tools.PagerWithDotsIndicator
 import com.project.namu.ui.theme.BackGround
 import com.project.namu.ui.theme.Ui_empty
 import com.project.namu.R
+import com.project.namu.component.Store_SwitchBottomBar
 
 
 @Composable
@@ -59,6 +62,7 @@ fun StoreScreen(navController: NavController) {
         topBar = { },
 
         bottomBar = {
+            Store_SwitchBottomBar(isAvailable = true)
         },
 
         content = { paddingValues ->
@@ -77,21 +81,30 @@ fun StoreContent() {
             .fillMaxSize()
             .background(color = BackGround),
 
-        ){
+        ) {
 
         item { Store_Pager() }
 
         item { Store_Detail() }
 
+        item { Spacer(modifier = Modifier.height(10.dp)) }
+
         item { Store_MenuDetail() }
 
-        item {  }
+        item { Store_MenuDetail() }
+
+        item { Store_MenuDetail() }
+
+        item { Store_MenuDetail() }
+
+        item { Store_MenuDetail() }
+
 
     }
 }
 
 @Composable
-fun Store_Pager(){
+fun Store_Pager() {
     var isFavorite by remember { mutableStateOf(false) } // 좋아요 상태
 
     Box {
@@ -116,17 +129,17 @@ fun Store_Pager(){
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(18.dp)
-                ,
+                    .padding(18.dp),
                 horizontalArrangement = Arrangement.End
-            ){
-                Icon(painter = painterResource(id = R.drawable.ic_shopping),
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_shopping),
                     contentDescription = "장바구니",
                     tint = Color.White,
                     modifier = Modifier
                         .padding(8.dp)
                         .size(28.dp)
-                    )
+                )
                 Icon(
                     imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                     contentDescription = "Like",
@@ -141,14 +154,15 @@ fun Store_Pager(){
     }
 }
 
+//페이저 아래 가게 이름 ~ 설명
 @Composable
-fun Store_Detail(){
+fun Store_Detail() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(170.dp)
             .background(Color.White)
-    ){
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -178,7 +192,11 @@ fun Store_Detail(){
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = "4.5", fontSize = 18.sp, color = Color.Black, fontWeight = FontWeight.Medium,
+                    Text(
+                        text = "4.5",
+                        fontSize = 18.sp,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Medium,
                     )
                 }
 
@@ -197,7 +215,12 @@ fun Store_Detail(){
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                Text(text = "0507-2093-2266", fontSize = 16.sp, color = Color.Black, fontWeight = FontWeight.Normal,)
+                Text(
+                    text = "0507-2093-2266",
+                    fontSize = 16.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Normal,
+                )
             }
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -214,7 +237,12 @@ fun Store_Detail(){
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                Text(text = "19:00 ~ 21:00", fontSize = 16.sp, color = Color.Black, fontWeight = FontWeight.Normal,)
+                Text(
+                    text = "19:00 ~ 21:00",
+                    fontSize = 16.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Normal,
+                )
             }
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -231,7 +259,12 @@ fun Store_Detail(){
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                Text(text = "부산 금정구 금정로 83 1층", fontSize = 16.sp, color = Color.Black, fontWeight = FontWeight.Normal,)
+                Text(
+                    text = "부산 금정구 금정로 83 1층",
+                    fontSize = 16.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Normal,
+                )
             }
         }
         Box(
@@ -266,13 +299,13 @@ fun Store_Detail(){
 
 @Composable
 fun Store_MenuDetail() {
-
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(20.dp)
+            .padding(horizontal = 20.dp)
+            .padding(top = 10.dp)
             .height(165.dp) // 기본 높이 설정
     ) {
         Row(
@@ -294,81 +327,71 @@ fun Store_MenuDetail() {
                     .fillMaxWidth()
                     .padding(12.dp)
             ) {
-                // 가게 이름
+                // 메뉴 이름
                 Text(
-                    text = "카페인중독 부산대점",
+                    text = "세트 A",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                // 메뉴 구성
+                Text(
+                    text = "애플 와플 (1), 콘치폭 핫도그 (1)",
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // 메뉴 정보
+                // 메뉴 설명
                 Text(
-                    text = "세트A (와플, 샌드위치)\n세트B (샌드위치, 휘낭시에)…",
+                    text = "어린시절 즐겨먹던 달콤한 사과쨈에 수제 생크림을 듬뿍 넣은 바삭한 와플과 소시지의 육즙이 팡팡 터지는 핫도그에 다양한 토핑이 듬뿍 들어간 핫도그",
                     fontSize = 12.sp,
-                    color = Color.Gray
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF8B8B8B),
+                    maxLines = 2,  // 두 줄까지만 표시
+                    overflow = TextOverflow.Ellipsis  // 이후는 ...으로 표시
+
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
-                // 가격 정보
-                Text(
-                    text = "₩ 5,000 ~",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
+                // 할인 정보 및 가격
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // 할인율
+                    Text(
+                        text = "30%",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF4CAF50) // Green color for discount
+                    )
 
-                Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
 
-                // 평점, 시간, 거리 정보
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                ){
-                    // 평점 정보
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = "Rating",
-                            tint = Color(0xFFFFD607),
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(text = "4.5 (100+)", fontSize = 12.sp, color = Color.Black)
-                    }
+                    // 할인된 가격
+                    Text(
+                        text = "7,070원",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
 
-                    Row() {
-                        // 시간 정보
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.card_clock),
-                                contentDescription = "Time",
-                                tint = Color(0xFF00BCD4),
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(text = "19:00 ~ 21:00", fontSize = 12.sp, color = Color.Gray)
-                        }
-
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        // 거리 정보
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.card_location),
-                                contentDescription = "Location",
-                                tint = Color(0xFF00BCD4),
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(text = "1.9km", fontSize = 12.sp, color = Color.Gray)
-                        }
-                    }
+                    // 원래 가격 (취소선)
+                    Text(
+                        text = "10,100원",
+                        fontSize = 14.sp,
+                        color = Color(0xFF8B8B8B),
+                        textDecoration = TextDecoration.LineThrough
+                    )
                 }
+
             }
         }
     }

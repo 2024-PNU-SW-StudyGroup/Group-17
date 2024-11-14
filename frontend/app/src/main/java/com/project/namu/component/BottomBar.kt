@@ -2,14 +2,19 @@ package com.project.namu.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -33,6 +38,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.project.namu.page.Store_MenuDetail
 import com.project.namu.ui.theme.GrayLine
 import com.project.namu.ui.theme.Main100
 import com.project.namu.ui.theme.Main200
@@ -153,6 +159,69 @@ fun BottomIcon(
         }
     }
 }
+
+// 가게 준비 되었을때 가격확인 바텀바
+@Composable
+fun Store_AvailableBottomBar() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp)
+            .padding(16.dp)
+            .background(color = Color(0xFF4CAF50), shape = RoundedCornerShape(16.dp)) // Green background with rounded corners
+            .clickable { /* Handle click */ },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "총 7,070원 - 장바구니 보기",
+            color = Color.White,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+//가게 준비중일때 바텀바
+@Composable
+fun Store_NotAvailableBottomBar() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp)
+            .padding(20.dp)
+            .background(color = Color.White, shape = RoundedCornerShape(16.dp)), // Gray background with rounded corners
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "아직 준비중이에요.",
+            color = Color.White,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium
+        )
+    }
+}
+
+//가게 영업상태에 따른 스위치 바텀바
+@Composable
+fun Store_SwitchBottomBar(isAvailable: Boolean) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 12.dp)
+            .background(color = Color.White),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        // 조건에 따른 바텀바 표시
+        if (isAvailable) {
+            Store_AvailableBottomBar() // 상품이 이용 가능할 때
+        } else {
+            Store_NotAvailableBottomBar() // 아직 준비 중일 때
+        }
+    }
+}
+
+
+
 
 @Preview(showBackground = true)
 @Composable
