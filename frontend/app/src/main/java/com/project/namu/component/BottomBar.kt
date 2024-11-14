@@ -251,6 +251,8 @@ fun Menu_BottomBar(){
                 fontWeight = FontWeight.Bold
             )
         }
+        
+        Spacer(modifier = Modifier.height(52.dp))
     }
 }
 

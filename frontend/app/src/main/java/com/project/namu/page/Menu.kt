@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -40,6 +41,8 @@ import com.project.namu.R
 import com.project.namu.component.Menu_BottomBar
 import com.project.namu.component.Store_SwitchBottomBar
 import com.project.namu.tools.PagerWithDotsIndicator
+import com.project.namu.ui.theme.Main100
+import com.project.namu.ui.theme.Main200
 import com.project.namu.ui.theme.Ui_empty
 
 
@@ -66,74 +69,112 @@ fun MenuScreen(navController: NavController) {
 @Composable
 fun MenuContent() {
     Column(
+        modifier = Modifier
+            .background(color = Color.White)
+            .fillMaxSize()
     ) {
         Menu_Image()
 
-        Row(
-            modifier = Modifier
-                .padding(20.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            ){
-            Text(
-                text = "세트 A",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
+        Column(modifier = Modifier.padding(20.dp)) {
 
-            // 메뉴 구성
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "세트A",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                // 메뉴 구성
+                Text(
+                    text = "애플 와플 (1), 콘치폭 핫도그 (1)",
+                    fontSize = 16.sp,
+                    color = Color.Black
+                )
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // 할인 정보 및 가격
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // 할인율 (녹색 배경 버튼 스타일)
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .background(color = Main100, shape = RoundedCornerShape(16.dp)) // 녹색 배경과 둥근 모서리
+                        .width(52.dp)
+                        .padding(horizontal = 8.dp, vertical = 4.dp) // 텍스트 주위의 패딩
+                ) {
+                    Text(
+                        text = "30%",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                // 할인된 가격
+                Text(
+                    text = "7,070원",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Main100 // 녹색 텍스트로 스타일링
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                // 원래 가격 (취소선)
+                Text(
+                    text = "10,100원",
+                    fontSize = 16.sp,
+                    color = Main100,
+                    textDecoration = TextDecoration.LineThrough
+                )
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // 메뉴 설명
             Text(
-                text = "애플 와플 (1), 콘치폭 핫도그 (1)",
+                text = "상세 정보",
                 fontSize = 20.sp,
-                color = Color.Black
-            )
-        }
-
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        // 메뉴 설명
-        Text(
-            text = "어린시절 즐겨먹던 달콤한 사과쨈에 수제 생크림을 듬뿍 넣은 바삭한 와플과 소시지의 육즙이 팡팡 터지는 핫도그에 다양한 토핑이 듬뿍 들어간 핫도그",
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color(0xFF8B8B8B),
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // 할인 정보 및 가격
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // 할인율
-            Text(
-                text = "30%",
-                fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF4CAF50) // Green color for discount
+                color = Color.Black,
             )
 
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            // 할인된 가격
             Text(
-                text = "7,070원",
+                text = "애플 와플 : 어린시절 즐겨먹던 달콤한 사과쨈에 수제 생크림을 듬뿍 넣은 바삭한 와플",
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            // 원래 가격 (취소선)
-            Text(
-                text = "10,100원",
-                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
                 color = Color(0xFF8B8B8B),
-                textDecoration = TextDecoration.LineThrough
             )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "콘치폭 핫도그 : 소시지의 육즙이 팡팡 터지는 핫도그에 다양한 토핑이 듬뿍 들어간 핫도그",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFF8B8B8B),
+            )
+
+
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+
         }
     }
 
