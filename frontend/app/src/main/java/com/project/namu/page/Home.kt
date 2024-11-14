@@ -98,6 +98,7 @@ fun HomeContent() {
     ) {
         item {
             PagerWithDotsIndicator(
+                indicatorColor = Main200,
                 pageCount = 5,
                 pageContent = { page ->
                     Box(
@@ -139,7 +140,7 @@ fun FoodCategoryRow() {
         ) {
             val categories = listOf(
                 "샌드위치" to R.drawable.sandwitch, "과일" to R.drawable.apple,
-                "편의점,마트" to R.drawable.market, "디저트" to R.drawable.dessert, "기타" to R.drawable.more
+                "편의점,마트" to R.drawable.market, "디저트" to R.drawable.dessert, "기타" to R.drawable.ic_more
             )
 
             categories.forEach { (name, icon) ->

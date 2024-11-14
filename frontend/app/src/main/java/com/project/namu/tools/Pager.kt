@@ -27,6 +27,7 @@ import com.project.namu.ui.theme.Main100
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PagerWithDotsIndicator(
+    indicatorColor: Color,
     pageCount: Int,
     pageContent: @Composable (page: Int) -> Unit
 ) {
@@ -56,17 +57,16 @@ fun PagerWithDotsIndicator(
             ) {
                 repeat(pageCount) { iteration ->
                     val color =
-                        if (pagerState.currentPage == iteration) Main100 else Color.LightGray
+                        if (pagerState.currentPage == iteration) indicatorColor else Color(0xFF9E9E9E)
                     Box(
                         modifier = Modifier
-                            .padding(3.dp)
+                            .padding(vertical = 3.dp, horizontal = 6.dp)
                             .clip(CircleShape)
                             .background(color)
-                            .size(8.dp)
+                            .size(6.dp)
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(24.dp)) //Spacer추가
         }
     }
 }
