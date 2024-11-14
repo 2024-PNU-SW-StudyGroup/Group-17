@@ -168,7 +168,10 @@ fun Store_AvailableBottomBar() {
             .fillMaxWidth()
             .height(80.dp)
             .padding(16.dp)
-            .background(color = Color(0xFF4CAF50), shape = RoundedCornerShape(16.dp)) // Green background with rounded corners
+            .background(
+                color = Color(0xFF4CAF50),
+                shape = RoundedCornerShape(16.dp)
+            ) // Green background with rounded corners
             .clickable { /* Handle click */ },
         contentAlignment = Alignment.Center
     ) {
@@ -207,7 +210,6 @@ fun Store_SwitchBottomBar(isAvailable: Boolean) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 12.dp)
             .background(color = Color.White),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -217,9 +219,40 @@ fun Store_SwitchBottomBar(isAvailable: Boolean) {
         } else {
             Store_NotAvailableBottomBar() // 아직 준비 중일 때
         }
+        
+        Spacer(modifier = Modifier.height(12.dp))
     }
 }
 
+@Composable
+fun Menu_BottomBar(){
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = Color.White),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)
+                .padding(16.dp)
+                .background(
+                    color = Color(0xFF4CAF50),
+                    shape = RoundedCornerShape(16.dp)
+                ) // Green background with rounded corners
+                .clickable { /* Handle click */ },
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "장바구니에 담기",
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+}
 
 
 
