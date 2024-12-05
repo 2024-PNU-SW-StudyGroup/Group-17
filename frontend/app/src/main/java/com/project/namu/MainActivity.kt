@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Greeting("Android")
-                    
+
                 }
             }
         }
@@ -35,6 +35,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
         text = "Hello $name!",
         modifier = modifier
+
     )
 }
 
