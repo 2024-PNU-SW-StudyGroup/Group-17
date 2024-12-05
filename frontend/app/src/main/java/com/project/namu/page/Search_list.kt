@@ -1,5 +1,6 @@
 package com.project.namu.page
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -200,7 +201,14 @@ fun CafeCardWithDetails() {
         colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier
             .fillMaxWidth()
+<<<<<<< HEAD
+            .height(180.dp) // 기본 높이 설정
+            .clickable {
+
+            }
+=======
             .height(165.dp) // 기본 높이 설정
+>>>>>>> 4d4262be357c5a329496f1207785a780c73dd6b0
     ) {
         Row(
             modifier = Modifier.fillMaxSize()
