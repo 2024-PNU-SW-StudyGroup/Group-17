@@ -93,6 +93,11 @@
 ---
 
 # 5️⃣ 소개 및 시연 영상
+## 로그인 화면
+[로그인시연](https://drive.google.com/file/d/12Vq8Ruy708gRFiNvEFxeTJdu0L5sb2AQ/view?usp=sharing)
+
+## 메인 페이지 화면
+[메인기능시연](https://drive.google.com/file/d/1GrMP0VrDSL-lynYzaZpFhDJQtvgh80Hy/view?usp=sharing)
 
 ---
 
