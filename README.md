@@ -75,6 +75,12 @@
 
 ---
 
+
+
+
+
+
+
 <div align="center">
   <img src="https://github.com/user-attachments/assets/be8fa987-a752-4dd9-a847-08b4d55667ed" size="400">
   <p>노션 - 전체 회의록</p>
