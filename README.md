@@ -94,10 +94,11 @@
 
 # 5️⃣ 소개 및 시연 영상
 ## 로그인 화면
-[로그인시연](https://drive.google.com/file/d/12Vq8Ruy708gRFiNvEFxeTJdu0L5sb2AQ/view?usp=sharing)
+![로그인 시연](https://github.com/user-attachments/assets/efa59376-f982-41cc-99ab-13821eed428d)
 
-## 메인 페이지 화면
-[메인기능시연](https://drive.google.com/file/d/1GrMP0VrDSL-lynYzaZpFhDJQtvgh80Hy/view?usp=sharing)
+
+## 메인 기능 화면
+![메인 기능 시연](https://github.com/user-attachments/assets/3c0529bc-421a-4a33-a84e-bbcc03231c0a)
 
 ---
 
