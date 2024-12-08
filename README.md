@@ -49,6 +49,8 @@
 
 ## 2.2 사용 기술
 
+---
+
 ### 🛠 기술 스택 (Technology Stack)
 
 ### Back-End
@@ -82,12 +84,16 @@
 
 
 <div align="center">
+
+  
   <img src="https://github.com/user-attachments/assets/be8fa987-a752-4dd9-a847-08b4d55667ed" size="400">
   <p>노션 - 전체 회의록</p>
   <br>
+  ---
   <img src="https://github.com/user-attachments/assets/f7416d03-796f-432c-a10a-7616970b5e56" size = "400">
   <p>노션 - 회의록 예시</p>
   <br>
+  ---
   <img src="https://github.com/user-attachments/assets/54cd8e43-6673-475b-b832-739af8f57be7" size = "400">
   <p>노션 - 피그마, 피그잼 활용 예시</p>
 </div>
@@ -100,11 +106,13 @@
 
 ## 3.1. 전체시스템 흐름도
 
+---
 
 <div align="center">
   <img src="https://github.com/user-attachments/assets/18f6a3a7-f796-4ede-83ab-5ebb7da0740d" size="400">
   <p> 전체 시스템 흐름도</p>
 </div>
+---
 
 ## 3.2. 기능설명
 <div align = "center" size = "600">
@@ -158,23 +166,26 @@
 
 </div>
 
+---
 ## 3.3. 기능명세서
 
 ### 기능명세서 : 피그마에서 작업
 
-
+---
 <div align="center">
   <img src="https://github.com/user-attachments/assets/c31aa533-e932-454e-bd9f-e29587f248e4" size="400">
   <p> 기능명세서 예시 1 </p>
   <br>
+  ---
   <img src="https://github.com/user-attachments/assets/ffde14fb-3dae-4dd7-813b-e722db6afc73" size = "400">
   <p> 기능명세서 예시 2 </p>
 </div>
 
-
+---
 
 ### API 명세서 : 노션에서 작업
 
+---
 
 <div align="center">
   <img src="https://github.com/user-attachments/assets/dd6daf75-8e4c-4955-8175-67d3c9d5dafc" size="400">
