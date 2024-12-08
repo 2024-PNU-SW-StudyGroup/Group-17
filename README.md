@@ -112,6 +112,7 @@
   <img src="https://github.com/user-attachments/assets/18f6a3a7-f796-4ede-83ab-5ebb7da0740d" size="400">
   <p> 전체 시스템 흐름도</p>
 </div>
+
 ---
 
 ## 3.2. 기능설명
@@ -176,7 +177,7 @@
   <img src="https://github.com/user-attachments/assets/c31aa533-e932-454e-bd9f-e29587f248e4" size="400">
   <p> 기능명세서 예시 1 </p>
   <br>
-  ---
+  <hr>
   <img src="https://github.com/user-attachments/assets/ffde14fb-3dae-4dd7-813b-e722db6afc73" size = "400">
   <p> 기능명세서 예시 2 </p>
 </div>
