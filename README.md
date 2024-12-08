@@ -46,9 +46,8 @@
 
 ## 2.1. 시스템 구성도
 
-## 2.1. 사용 기술
 
-## 2.2 프로젝트 기술 스택 및 도구
+## 2.2 사용 기술
 
 ### 🛠 기술 스택 (Technology Stack)
 
@@ -58,6 +57,7 @@
 
 ### Front-End
 - **Flutter**: 크로스 플랫폼 애플리케이션 개발 프레임워크.
+- **Jetpack Compose**: 안드로이드 개발 프레임 워크.
 - **Dart**: Flutter의 주요 프로그래밍 언어로, UI와 애플리케이션 로직 작성.
 - **Kotlin**: Android 네이티브 코드 또는 Flutter 플러그인 개발 시 활용.
 
@@ -71,6 +71,8 @@
 ### 🤝 협업 도구 (Collaboration Tools)
 - **GitHub**: 버전 관리 및 팀 협업을 위한 소스 코드 저장소.
 - **Notion**: 프로젝트 관리, 문서 작성 및 일정 공유를 위한 도구.
+
+![image](https://github.com/user-attachments/assets/45608036-b20d-4d5b-a9df-0917f0cf2da1)
 
 ---
 
