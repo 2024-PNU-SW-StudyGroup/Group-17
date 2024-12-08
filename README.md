@@ -48,6 +48,23 @@
 
 ## 2.1. 사용 기술
 
+기술 스택 (Technology Stack)
+Back-End
+Spring Framework: 서버 로직과 데이터 처리, RESTful API 구축을 위한 프레임워크.
+Java: 백엔드 애플리케이션의 주요 언어.
+
+Front-End
+Flutter: 크로스 플랫폼 애플리케이션 개발을 위한 프레임워크로, Android 및 iOS용 네이티브 인터페이스 제공.
+Dart: Flutter의 주요 프로그래밍 언어로, UI와 애플리케이션 로직 작성.
+Kotlin: Android 플랫폼에서 네이티브 코드 또는 Flutter 플러그인 개발 시 활용.
+
+도구 (Tools)
+Figma: UI/UX 설계 및 프로토타입 제작을 위한 협업 중심 디자인 도구.
+
+협업 도구 (Collaboration Tools)
+GitHub: 버전 관리 및 팀 협업을 위한 소스 코드 저장소.
+Notion: 프로젝트 관리, 문서 작성, 일정 공유등을 위한 저장소.
+
 ---
 
 # 3️⃣ 개발결과
