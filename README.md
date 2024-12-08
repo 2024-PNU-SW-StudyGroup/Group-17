@@ -99,8 +99,10 @@
 # 3️⃣ 개발결과
 
 ## 3.1. 전체시스템 흐름도
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/18f6a3a7-f796-4ede-83ab-5ebb7da0740d" size="400">
+  <p> 전체 시스템 흐름도</p>
 
-![image](https://github.com/user-attachments/assets/18f6a3a7-f796-4ede-83ab-5ebb7da0740d)
 
 ## 3.2. 기능설명
 
