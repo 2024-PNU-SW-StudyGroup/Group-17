@@ -89,11 +89,11 @@
   <img src="https://github.com/user-attachments/assets/be8fa987-a752-4dd9-a847-08b4d55667ed" size="400">
   <p>노션 - 전체 회의록</p>
   <br>
----
+  <hr>
   <img src="https://github.com/user-attachments/assets/f7416d03-796f-432c-a10a-7616970b5e56" size = "400">
   <p>노션 - 회의록 예시</p>
   <br>
-  ---
+  <hr>
   <img src="https://github.com/user-attachments/assets/54cd8e43-6673-475b-b832-739af8f57be7" size = "400">
   <p>노션 - 피그마, 피그잼 활용 예시</p>
 </div>
