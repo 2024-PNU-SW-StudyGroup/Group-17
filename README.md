@@ -72,14 +72,15 @@
 - **GitHub**: 버전 관리 및 팀 협업을 위한 소스 코드 저장소.
 - **Notion**: 프로젝트 관리, 문서 작성 및 일정 공유를 위한 도구.
 
-![image](https://github.com/user-attachments/assets/be8fa987-a752-4dd9-a847-08b4d55667ed)
-#### 노션 - 전체 회의록
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/be8fa987-a752-4dd9-a847-08b4d55667ed" size="400">
+  <p>노션 - 전체 회의록</p>
+  <img src="https://github.com/user-attachments/assets/f7416d03-796f-432c-a10a-7616970b5e56">
+  <p>노션 - 회의록 예시</p>
+  <img src="https://github.com/user-attachments/assets/54cd8e43-6673-475b-b832-739af8f57be7">
+  <p>노션 - 피그마, 피그잼 활용 예시</p>
+</div>
 
-![image](https://github.com/user-attachments/assets/f7416d03-796f-432c-a10a-7616970b5e56)
-#### 노션 - 회의록 예시
-
-![image](https://github.com/user-attachments/assets/54cd8e43-6673-475b-b832-739af8f57be7)
-#### 피그마, 피그잼 활용 예시
 
 
 ---
