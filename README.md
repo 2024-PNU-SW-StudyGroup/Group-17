@@ -48,9 +48,9 @@
 
 ## 2.1. 사용 기술
 
-# 프로젝트 기술 스택 및 도구
+## 2.2 프로젝트 기술 스택 및 도구
 
-## 🛠 기술 스택 (Technology Stack)
+### 🛠 기술 스택 (Technology Stack)
 
 ### Back-End
 - **Spring Framework**: 서버 로직과 데이터 처리, RESTful API 구축.
@@ -63,12 +63,12 @@
 
 ---
 
-## ⚙️ 도구 (Tools)
+### ⚙️ 도구 (Tools)
 - **Figma**: UI/UX 설계 및 프로토타입 제작 도구.
 
 ---
 
-## 🤝 협업 도구 (Collaboration Tools)
+### 🤝 협업 도구 (Collaboration Tools)
 - **GitHub**: 버전 관리 및 팀 협업을 위한 소스 코드 저장소.
 - **Notion**: 프로젝트 관리, 문서 작성 및 일정 공유를 위한 도구.
 
