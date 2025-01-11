@@ -164,7 +164,7 @@ fun Login(){
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        LogSignButton(type = "login")
+        LogSignButton(type = "login", color = "green")
 
         Text(
             text = "아이디/비밀번호 찾기",
@@ -215,7 +215,7 @@ fun Login(){
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        LogSignButton(type = "signin")
+        LogSignButton(type = "signin", color = "white")
     }
 
 }

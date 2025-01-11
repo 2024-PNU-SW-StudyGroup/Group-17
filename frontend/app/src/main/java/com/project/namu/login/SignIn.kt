@@ -98,14 +98,18 @@ fun SignIn(){
             InformationTextField(textfield = "E-mail")
 
             PasswordTextFields()
-
-
-
-
-
-
         }
+        Spacer(modifier = Modifier.height(30.dp))
 
+        LogSignButton(type = "signin", color = "green" )
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        TextWithDivider(text = "아이디가 있으신가요?")
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        LogSignButton(type = "login", color = "white")
     }
 }
 
