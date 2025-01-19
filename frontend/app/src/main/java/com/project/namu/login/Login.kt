@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,7 +57,13 @@ import com.project.namu.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Login(){
+fun Login(
+    viewModel: PopUpViewModel
+){
+    val isDialogVisible by viewModel.isDialogVisible.collectAsState()
+    if(isDialogVisible){
+        PopUp(text = "아이디 또는 비밀번호를\n 확인해 주세요.", viewModel = viewModel)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -164,7 +171,12 @@ fun Login(){
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        LogSignButton(type = "login", color = "green")
+        if(text == "" || password == "") {
+            LogSignButton(type = "login", color = "green", viewModel = viewModel, dialog = true)
+        }
+        else{
+            LogSignButton(type = "login", color = "green", viewModel = viewModel)
+        }
 
         Text(
             text = "아이디/비밀번호 찾기",
@@ -215,7 +227,7 @@ fun Login(){
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        LogSignButton(type = "signin", color = "white")
+        LogSignButton(type = "signin", color = "white", viewModel = viewModel)
     }
 
 }
@@ -315,10 +327,10 @@ fun TextWithDivider(
     }
 }
 
-
-
 @Preview
 @Composable
 fun LoginPreview(){
-    Login()
+    Login(viewModel = PopUpViewModel())
 }
+
+

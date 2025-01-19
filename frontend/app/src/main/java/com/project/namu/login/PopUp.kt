@@ -1,6 +1,7 @@
 package com.project.namu.login
 
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +23,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,23 +40,31 @@ import com.project.namu.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PopUp(){
-    AlertDialog(
-        onDismissRequest = { /*TODO*/ },
-        modifier = Modifier
-            .width(300.dp)
-            .height(200.dp)
-            .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 12.dp))
+fun PopUp(
+    text : String,
+    viewModel : PopUpViewModel
+){
 
-            .padding(start = 60.dp, top = 27.dp, end = 70.dp, bottom = 28.dp)
-    ) {
-        DialogContent()
-    }
+        AlertDialog(
+            onDismissRequest = { },
+            modifier = Modifier
+                .width(300.dp)
+                .height(200.dp)
+                .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 12.dp))
+
+                .padding(start = 40.dp, top = 27.dp, end = 40.dp, bottom = 28.dp)
+        ) {
+            DialogContent(text, viewModel)
+        }
+
 }
 
 
 @Composable
-fun DialogContent(){
+fun DialogContent(
+    text : String,
+    viewModel: PopUpViewModel
+){
 Column (
     modifier= Modifier
         .fillMaxSize(),
@@ -69,7 +80,8 @@ Column (
     Spacer(modifier = Modifier.height(8.dp))
 
     Text(
-        text = "회원가입이 완료되었어요.",
+        modifier = Modifier.fillMaxWidth(),
+        text = text,
         style = TextStyle(
             fontSize = 16.sp,
             fontWeight = FontWeight(500),
@@ -79,10 +91,16 @@ Column (
         )
     )
 
-    Spacer(modifier = Modifier.height(32.dp))
+    Spacer(modifier = Modifier.height(22.dp))
 
     Button(
-        onClick = { },
+        onClick = {
+
+                  viewModel.hideDialog()
+            Log.d("PopUp", "버튼 클릭")
+
+
+        },
         colors = ButtonDefaults.buttonColors(
             containerColor = Color(0xFF1F9F37)
         ),
@@ -114,5 +132,5 @@ Column (
 @Preview
 @Composable
 fun PopUpPreview(){
-    PopUp()
+    PopUp(viewModel = PopUpViewModel(), text = "회원가입이 완료되었습니다.")
 }

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Lock
@@ -23,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TransformedText
@@ -48,7 +51,14 @@ import androidx.compose.ui.unit.sp
 import com.project.namu.R
 
 @Composable
-fun SignIn(){
+fun SignIn(
+    viewModel: PopUpViewModel
+){
+    val isDialogVisible by viewModel.isDialogVisible.collectAsState()
+
+    if(isDialogVisible){
+        PopUp( text = "회원가입이 완료되었어요.", viewModel = viewModel, )
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -78,6 +88,10 @@ fun SignIn(){
         )
 
         Spacer(modifier= Modifier.height(50.dp))
+        var name by remember { mutableStateOf("") }
+        var email by remember { mutableStateOf("") }
+        var phoneNumber by remember { mutableStateOf("") }
+        var passwordsDone by remember { mutableStateOf(false) }
 
         Column(
             modifier = Modifier
@@ -85,31 +99,54 @@ fun SignIn(){
                 .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+
+
+
             TextFieldName(text = "  이름")
 
-            InformationTextField(textfield = "Name")
+            InformationTextField(
+                textfield = "Name",
+                text = name,
+                textUpdate = { newText -> name = newText }
+                )
 
             TextFieldName(text = "  전화번호")
 
-            PhoneNumberTextField()
+            PhoneNumberTextField(
+                text = phoneNumber,
+                textUpdate = { newText ->
+                    // 최대 글자 수는 숫자 기준 11자리 (하이픈 제외)
+                    val digits = newText.filter { it.isDigit() }
+                    if (digits.length <= 11) {
+                        phoneNumber = digits
+ }}
+            )
 
             TextFieldName(text = "  이메일(아이디)")
 
-            InformationTextField(textfield = "E-mail")
+            InformationTextField(
+                textfield = "E-mail",
+                text = email,
+                textUpdate= { newText -> email = newText }
 
-            PasswordTextFields()
+            )
+
+            PasswordTextFields(
+                passwordsDone = { isMatch -> passwordsDone = isMatch}
+
+            )
         }
         Spacer(modifier = Modifier.height(30.dp))
 
-        LogSignButton(type = "signin", color = "green" )
+        if(name != "" && email != "" && phoneNumber != "" && passwordsDone){
+
+        LogSignButton(type = "signin", color = "green", viewModel = viewModel, dialog = true)}
+        else{
+        LogSignButton(type = "signin", color = "green", viewModel = viewModel)}
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        TextWithDivider(text = "아이디가 있으신가요?")
 
-        Spacer(modifier = Modifier.height(10.dp))
-
-        LogSignButton(type = "login", color = "white")
     }
 }
 
@@ -178,15 +215,13 @@ class PhoneNumberVisualTransformation : VisualTransformation {
 }
 
 @Composable
-fun PhoneNumberTextField(){
-    var text by remember { mutableStateOf("") }
+fun PhoneNumberTextField(
+    text : String,
+    textUpdate : (String) -> Unit
+){
     TextField(
         value = text,
-        onValueChange = { newText ->
-            // 최대 글자 수는 숫자 기준 11자리 (하이픈 제외)
-            val digits = newText.filter { it.isDigit() }
-            if (digits.length <= 11) {
-                text = newText }},
+        onValueChange = textUpdate,
         label = { Text(
             text = "Phone Number",
             style = TextStyle(
@@ -200,6 +235,8 @@ fun PhoneNumberTextField(){
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = Color.White,
             unfocusedIndicatorColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            focusedContainerColor = Color.White
 
             ),
         shape = RoundedCornerShape(16.dp),
@@ -217,12 +254,14 @@ fun PhoneNumberTextField(){
 
 @Composable
 fun InformationTextField(
-    textfield: String
+    textfield: String,
+    text : String,
+    textUpdate : (String) -> Unit
+
 ){
-    var text by remember { mutableStateOf("") }
     TextField(
         value = text,
-        onValueChange = { text = it },
+        onValueChange = textUpdate,
         label = { Text(
             text = textfield,
             style = TextStyle(
@@ -236,6 +275,9 @@ fun InformationTextField(
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = Color.White,
             unfocusedIndicatorColor = Color.Transparent,
+            focusedContainerColor = Color.White,
+            focusedIndicatorColor = Color.Transparent
+
 
             ),
         shape = RoundedCornerShape(16.dp),
@@ -249,10 +291,14 @@ fun InformationTextField(
         ,singleLine = true
     )
 
+
+
 }
 
 @Composable
-fun PasswordTextFields(){
+fun PasswordTextFields(
+    passwordsDone : (Boolean) -> Unit
+){
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -289,6 +335,8 @@ fun PasswordTextFields(){
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = Color.White,
             unfocusedIndicatorColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            focusedContainerColor = Color.White
 
             ),
         shape = RoundedCornerShape(16.dp),
@@ -322,7 +370,6 @@ fun PasswordTextFields(){
             )
     }
 
-    var tryAgain = ""
     var isFocused by remember { mutableStateOf(false) }
 
     TextField(
@@ -352,6 +399,8 @@ fun PasswordTextFields(){
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = Color.White,
             unfocusedIndicatorColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            focusedContainerColor = Color.White
 
             ),
         shape = RoundedCornerShape(16.dp),
@@ -371,9 +420,11 @@ fun PasswordTextFields(){
         if (passwordsMatch == false){
             confirmPassword = ""
             isError = true
-
         }
+        else {passwordsDone(true)}
     }
+
+
 
     if(isFocused == true && isError == true){
         isError = false
@@ -383,5 +434,5 @@ fun PasswordTextFields(){
 @Preview
 @Composable
 fun SignInPreview(){
-    SignIn()
+    SignIn(viewModel = PopUpViewModel())
 }

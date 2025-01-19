@@ -10,21 +10,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.project.namu.login.Login
+import com.project.namu.login.PopUpViewModel
+import com.project.namu.login.SignIn
 import com.project.namu.ui.theme.NamuTheme
 
 class MainActivity : ComponentActivity() {
+
+    val popViewModel = PopUpViewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             NamuTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-
-                }
+              SignIn(viewModel = popViewModel)
             }
         }
     }
