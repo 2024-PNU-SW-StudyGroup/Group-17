@@ -25,14 +25,18 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -40,10 +44,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.project.namu.R
+import com.project.namu.model.MyPageViewModel
 
 @Composable
-fun MyPage(){
+fun MyPage(
+    MyPageViewModel : MyPageViewModel
+){
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -51,8 +60,11 @@ fun MyPage(){
         contentAlignment = Alignment.TopCenter
 
     ){
-
-
+        MyPageViewModel.fetchMyPageData(1)
+        val isOrderMessage by MyPageViewModel.isOrderMessage.collectAsState()
+        val profile_url by MyPageViewModel.profile_url.collectAsState()
+        val user_name by MyPageViewModel.user_name.collectAsState()
+        val total_discount by MyPageViewModel.total_discount.collectAsState()
 
         Text(
             text = "마이페이지",
@@ -94,7 +106,7 @@ fun MyPage(){
 
                     ) {
                         Text(
-                            text = "닉네임",
+                            text = user_name,
                             style = TextStyle(
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight(600),
@@ -130,7 +142,7 @@ fun MyPage(){
 
                 ){
                 Text(
-                text = "닉네임님은 현재 이만큼 절약했어요!",
+                text = "$user_name 님은 현재 이만큼 절약했어요!",
                 style = TextStyle(
                     fontSize = 12.sp,
                     fontWeight = FontWeight(500),
@@ -138,12 +150,14 @@ fun MyPage(){
                 )
             )
 
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
+
+
         Row(
             verticalAlignment = Alignment.CenterVertically
         ){
             Text(
-                text = "238,990",
+                text = "$total_discount",
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight(600),
@@ -165,7 +179,13 @@ fun MyPage(){
                 }
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(20.dp))
+
+            if (isOrderMessage) {
+                ReservePopUp()
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
 
             Row(
                 modifier= Modifier
@@ -189,7 +209,7 @@ fun MyPage(){
                     ) {
                         Column {
                             Text(
-                                text = "닉네임님 덕분에\n 줄어든 이산화탄소",
+                                text = "$user_name 님 덕분에\n 줄어든 이산화탄소",
                                 style = TextStyle(
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight(500),
@@ -244,7 +264,7 @@ fun MyPage(){
                     ) {
                         Column() {
                             Text(
-                                text = "닉네임님 덕분에\n 지킨 나무의 수",
+                                text = "$user_name 님 덕분에\n 지킨 나무의 수",
                                 style = TextStyle(
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight(500),
@@ -408,20 +428,29 @@ fun MyPage(){
         }
 
 
-        Image(
-            painter = painterResource(id = R.drawable.examplefood),
+        ProfileImage(imageUrl = profile_url)
+
+    }
+}
+
+@Composable
+fun ProfileImage(imageUrl: String?) {
+    if (imageUrl != null) {
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(imageUrl)
+                .crossfade(true) // 부드러운 전환 효과
+                .build(),
             contentDescription = "프로필 사진",
-
-
             modifier = Modifier
                 .padding(top = 88.dp)
                 .size(80.dp)
                 .clip(CircleShape),
             contentScale = ContentScale.Crop,
-
-
-            )
-
+        )
+    } else {
+        // 이미지 URL이 아직 로드되지 않았을 때 보여줄 UI (예: 로딩 스피너)
+        CircularProgressIndicator(modifier = Modifier.size(80.dp))
     }
 }
 
@@ -488,5 +517,5 @@ fun SettingButton(
 @Preview
 @Composable
 fun MyPagePreview(){
-    MyPage()
+    MyPage(MyPageViewModel())
 }

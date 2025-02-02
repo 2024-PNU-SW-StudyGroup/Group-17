@@ -53,16 +53,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.project.namu.R
+import com.project.namu.model.LogInViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Login(
-    viewModel: PopUpViewModel
+    PopUpViewModel: PopUpViewModel,
+    LogInViewModel: LogInViewModel,
+    navController: NavController
 ){
-    val isDialogVisible by viewModel.isDialogVisible.collectAsState()
+
+
+
+
+    val isDialogVisible by PopUpViewModel.isDialogVisible.collectAsState()
     if(isDialogVisible){
-        PopUp(text = "아이디 또는 비밀번호를\n 확인해 주세요.", viewModel = viewModel)
+        PopUp(text = "아이디 또는 비밀번호를\n 확인해 주세요.", viewModel = PopUpViewModel)
     }
     Column(
         modifier = Modifier
@@ -91,11 +100,11 @@ fun Login(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         Spacer(modifier = Modifier.height(35.dp))
-        var text by remember { mutableStateOf("") }
+        val email by LogInViewModel.email.collectAsState()
 
         TextField(
-            value = text,
-            onValueChange = { text = it },
+            value = email,
+            onValueChange = { LogInViewModel.updateEmail(it) },
             label = { Text(
                 text = "E-mail",
                 style = TextStyle(
@@ -125,12 +134,12 @@ fun Login(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        var password by remember { mutableStateOf("") }
+        val password by LogInViewModel.password.collectAsState()
         var passwordVisible by remember { mutableStateOf(false) }
 
         TextField(
             value = password,
-            onValueChange = { password = it },
+            onValueChange = { LogInViewModel.updatePassword(it) },
             label = { Text(
                 text = "Password",
                 style = TextStyle(
@@ -171,12 +180,10 @@ fun Login(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        if(text == "" || password == "") {
-            LogSignButton(type = "login", color = "green", viewModel = viewModel, dialog = true)
-        }
-        else{
-            LogSignButton(type = "login", color = "green", viewModel = viewModel)
-        }
+        //if(email == "" || password == "" || isLogInSuccess == false) {
+
+            LogSignButton(type = "login", color = "green", PopUpViewModel = PopUpViewModel, LogInViewModel = LogInViewModel, navController)
+
 
         Text(
             text = "아이디/비밀번호 찾기",
@@ -227,7 +234,7 @@ fun Login(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        LogSignButton(type = "signin", color = "white", viewModel = viewModel)
+        LogSignButton(type = "signin", color = "white", PopUpViewModel = PopUpViewModel, LogInViewModel = LogInViewModel, navController)
     }
 
 }
@@ -330,7 +337,7 @@ fun TextWithDivider(
 @Preview
 @Composable
 fun LoginPreview(){
-    Login(viewModel = PopUpViewModel())
+    Login(PopUpViewModel= PopUpViewModel(), LogInViewModel= LogInViewModel(), navController = rememberNavController())
 }
 
 

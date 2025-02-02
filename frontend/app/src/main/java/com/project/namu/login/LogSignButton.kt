@@ -23,20 +23,37 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.project.namu.model.EmailLogInRequest
+import com.project.namu.model.LogInViewModel
+import com.project.namu.navigation.Screen
 
 @Composable
 fun LogSignButton(
     type: String,
     color: String,
-    viewModel: PopUpViewModel,
-    dialog: Boolean = false
+    PopUpViewModel: PopUpViewModel,
+    LogInViewModel : LogInViewModel,
+    navController: NavController
+
+
 ){
+
+    val isSuccess by LogInViewModel.isSuccess.collectAsState()
+
+    val email by LogInViewModel.email.collectAsState()
+    val password by LogInViewModel.password.collectAsState()
 
 
     Button(
         onClick = {
-            if (dialog == true) {
-                viewModel.showDialog()
+            if (email=="" || password=="") {
+                PopUpViewModel.showDialog()
+            } else {
+                val request = EmailLogInRequest(email, password)
+                LogInViewModel.postLoginData(request, navController, PopUpViewModel)
+
             }
         },
         colors = ButtonDefaults.buttonColors(
@@ -79,5 +96,5 @@ fun LogSignButton(
 @Preview
 @Composable
 fun LogSignButtonPreview(){
-    LogSignButton(type = "login", color = "green", viewModel = PopUpViewModel())
+    LogSignButton(type = "login", color = "green", PopUpViewModel = PopUpViewModel(), LogInViewModel = LogInViewModel(), navController = rememberNavController())
 }

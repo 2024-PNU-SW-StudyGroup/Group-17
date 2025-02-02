@@ -48,16 +48,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.project.namu.R
+import com.project.namu.model.EmailSignInRequest
+import com.project.namu.model.SignInViewModel
 
 @Composable
 fun SignIn(
-    viewModel: PopUpViewModel
+    popUpViewModel: PopUpViewModel,
+    signInViewModel: SignInViewModel,
+    navController: NavController
 ){
-    val isDialogVisible by viewModel.isDialogVisible.collectAsState()
+    val isDialogVisible by popUpViewModel.isDialogVisible.collectAsState()
+    val signInMessage by signInViewModel.signInMessage.collectAsState()
+
 
     if(isDialogVisible){
-        PopUp( text = "회원가입이 완료되었어요.", viewModel = viewModel, )
+        PopUp( text = "회원가입이 완료되었어요.", viewModel = popUpViewModel, )
     }
     Column(
         modifier = Modifier
@@ -74,6 +81,8 @@ fun SignIn(
                 .height(66.dp)
                 .align(Alignment.CenterHorizontally)
         )
+
+
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = "작은 배달로, 나무 키우기",
@@ -91,7 +100,11 @@ fun SignIn(
         var name by remember { mutableStateOf("") }
         var email by remember { mutableStateOf("") }
         var phoneNumber by remember { mutableStateOf("") }
+        var passwords by remember { mutableStateOf("dsd") }
         var passwordsDone by remember { mutableStateOf(false) }
+
+        val signInRequest = EmailSignInRequest(user_name = name, password = passwords, email = email )
+
 
         Column(
             modifier = Modifier
@@ -103,6 +116,7 @@ fun SignIn(
 
 
             TextFieldName(text = "  이름")
+
 
             InformationTextField(
                 textfield = "Name",
@@ -132,19 +146,26 @@ fun SignIn(
             )
 
             PasswordTextFields(
-                passwordsDone = { isMatch -> passwordsDone = isMatch}
-
+                passwordsDone = { isMatch -> passwordsDone = isMatch},
+                passwordsRequest = { finalPasswords -> passwords = finalPasswords}
             )
         }
         Spacer(modifier = Modifier.height(30.dp))
 
+        /*
         if(name != "" && email != "" && phoneNumber != "" && passwordsDone){
+            signInViewModel.fetchSignInSuccess(signInRequest)
+            if(signInMessage == "success"){
+            LogSignButton(type = "signin", color = "green", PopUpViewModel = popUpViewModel, LogInViewModel = )}
+            else{  LogSignButton(type = "signin", color = "green", viewModel = popUpViewModel)}
+            }
 
-        LogSignButton(type = "signin", color = "green", viewModel = viewModel, dialog = true)}
         else{
-        LogSignButton(type = "signin", color = "green", viewModel = viewModel)}
-
+        LogSignButton(type = "signin", color = "green", viewModel = popUpViewModel)}
+*/
         Spacer(modifier = Modifier.height(30.dp))
+
+
 
 
     }
@@ -297,7 +318,9 @@ fun InformationTextField(
 
 @Composable
 fun PasswordTextFields(
-    passwordsDone : (Boolean) -> Unit
+
+    passwordsDone : (Boolean) -> Unit,
+    passwordsRequest : (String) -> Unit
 ){
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -415,13 +438,17 @@ fun PasswordTextFields(
         , singleLine = true
     )
 
+
     if(isFocused == false && confirmPassword != "") {
         var passwordsMatch = password == confirmPassword
         if (passwordsMatch == false){
             confirmPassword = ""
             isError = true
         }
-        else {passwordsDone(true)}
+        else {
+            passwordsDone(true)
+            passwordsRequest(confirmPassword)
+        }
     }
 
 
@@ -431,8 +458,3 @@ fun PasswordTextFields(
     }
 }
 
-@Preview
-@Composable
-fun SignInPreview(){
-    SignIn(viewModel = PopUpViewModel())
-}
