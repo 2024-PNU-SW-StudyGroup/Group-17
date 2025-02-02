@@ -30,5 +30,7 @@ interface ApiService{
     ) : EmailSignInResponse
 
     @POST("/login")
-    suspend fun logInRequest(@Body request: EmailLogInRequest): Response<EmailLogInResponse> // ✅ Response<T>로 변경
+    suspend fun logInRequest(
+        @Body request: EmailLogInRequest
+    ): EmailLogInResponse // ✅ Response<T>로 변경
 }

@@ -1,5 +1,6 @@
 package com.project.namu.login
 
+import android.content.Context
 import android.database.Cursor
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -56,6 +57,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.project.namu.R
+import com.project.namu.model.AuthRepository
+import com.project.namu.model.AuthViewModel
 import com.project.namu.model.LogInViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,7 +66,8 @@ import com.project.namu.model.LogInViewModel
 fun Login(
     PopUpViewModel: PopUpViewModel,
     LogInViewModel: LogInViewModel,
-    navController: NavController
+    navController: NavController,
+    AuthViewModel : AuthViewModel
 ){
 
 
@@ -182,7 +186,7 @@ fun Login(
 
         //if(email == "" || password == "" || isLogInSuccess == false) {
 
-            LogSignButton(type = "login", color = "green", PopUpViewModel = PopUpViewModel, LogInViewModel = LogInViewModel, navController)
+            LogSignButton(type = "login", color = "green", PopUpViewModel = PopUpViewModel, LogInViewModel = LogInViewModel, navController, AuthViewModel = AuthViewModel)
 
 
         Text(
@@ -234,7 +238,7 @@ fun Login(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        LogSignButton(type = "signin", color = "white", PopUpViewModel = PopUpViewModel, LogInViewModel = LogInViewModel, navController)
+        LogSignButton(type = "signin", color = "white", PopUpViewModel = PopUpViewModel, LogInViewModel = LogInViewModel, navController, AuthViewModel = AuthViewModel)
     }
 
 }
@@ -334,10 +338,15 @@ fun TextWithDivider(
     }
 }
 
+/*
 @Preview
 @Composable
 fun LoginPreview(){
-    Login(PopUpViewModel= PopUpViewModel(), LogInViewModel= LogInViewModel(), navController = rememberNavController())
+    Login(PopUpViewModel= PopUpViewModel(), LogInViewModel= LogInViewModel(), navController = rememberNavController(), AuthViewModel = AuthViewModel(
+        AuthRepository()
+    )
+    )
 }
 
 
+*/

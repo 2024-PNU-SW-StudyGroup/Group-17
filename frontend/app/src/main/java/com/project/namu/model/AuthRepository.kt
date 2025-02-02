@@ -1,6 +1,7 @@
 package com.project.namu.model
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
@@ -15,6 +16,7 @@ class AuthRepository(private val context : Context) {
         context.tokenDataStore.edit { preferences ->
             preferences[stringPreferencesKey("access_token")] = accessToken
             preferences[stringPreferencesKey("refresh_token")] = refreshToken
+            Log.d("token", "$accessToken")
         }
     }
 

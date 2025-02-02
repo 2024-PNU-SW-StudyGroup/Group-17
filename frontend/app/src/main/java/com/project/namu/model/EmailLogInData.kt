@@ -1,5 +1,7 @@
 package com.project.namu.model
 
+import com.google.gson.annotations.SerializedName
+
 data class EmailLogInRequest(
     val email : String,
     val password : String
@@ -7,8 +9,13 @@ data class EmailLogInRequest(
 )
 
 data class EmailLogInResponse(
-    val userID :Int,
-    val username : String,
-    val password: String
+    val data : Data
 )
+
+data class Data (
+    val accessToken : String,
+    val refreshToken : String
+)
+
+
 

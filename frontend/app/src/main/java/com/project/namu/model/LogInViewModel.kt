@@ -35,15 +35,17 @@ class LogInViewModel : ViewModel(
     }
 
 
-    fun postLoginData(request : EmailLogInRequest, navController: NavController, popUpViewModel: PopUpViewModel){
+    fun postLoginData(request : EmailLogInRequest, navController: NavController, popUpViewModel: PopUpViewModel, authViewModel: AuthViewModel){
         Log.d("LogInViewModel", "서버 응답 코드: $request")
         viewModelScope.launch {
             try{
                 val response = namuService.logInRequest(request)
                 _isSuccess.value = true
+
+                authViewModel.saveToken(response.data.accessToken, response.data.refreshToken)
+
                 //_userID.value = response.userID
-                Log.d("LogInViewModel", "서버 응답 코드: ${response.code()}") // ✅ HTTP 상태 코드 출력
-                Log.d("LogInViewModel", "서버 응답 바디: ${response.body()}") // ✅ 응답 바디 출력
+                // ✅ 응답 바디 출력
                 Log.d("LogInViewModel", "서버 응답 성공: $response")
                 navController.navigate(Screen.Signin.route) // 성공하면 바로 이동
 

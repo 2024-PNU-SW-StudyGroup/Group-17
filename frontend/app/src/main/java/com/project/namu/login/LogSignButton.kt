@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.project.namu.model.AuthViewModel
 import com.project.namu.model.EmailLogInRequest
 import com.project.namu.model.LogInViewModel
 import com.project.namu.navigation.Screen
@@ -35,7 +36,8 @@ fun LogSignButton(
     color: String,
     PopUpViewModel: PopUpViewModel,
     LogInViewModel : LogInViewModel,
-    navController: NavController
+    navController: NavController,
+    AuthViewModel : AuthViewModel
 
 
 ){
@@ -52,7 +54,7 @@ fun LogSignButton(
                 PopUpViewModel.showDialog()
             } else {
                 val request = EmailLogInRequest(email, password)
-                LogInViewModel.postLoginData(request, navController, PopUpViewModel)
+                LogInViewModel.postLoginData(request, navController, PopUpViewModel, AuthViewModel)
 
             }
         },
@@ -93,8 +95,3 @@ fun LogSignButton(
     }
 }
 
-@Preview
-@Composable
-fun LogSignButtonPreview(){
-    LogSignButton(type = "login", color = "green", PopUpViewModel = PopUpViewModel(), LogInViewModel = LogInViewModel(), navController = rememberNavController())
-}
