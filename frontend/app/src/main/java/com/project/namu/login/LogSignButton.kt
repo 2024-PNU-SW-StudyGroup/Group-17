@@ -22,7 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.project.namu.model.EmailLogInRequest
+import com.project.namu.model.EmailSignInRequest
 import com.project.namu.model.LogInViewModel
+import com.project.namu.model.SignInViewModel
+import com.project.namu.navigation.Screen
 
 @Composable
 fun LogSignButton(
@@ -30,25 +33,44 @@ fun LogSignButton(
     color: String,
     PopUpViewModel: PopUpViewModel,
     LogInViewModel : LogInViewModel,
-    navController: NavController
+    signInViewModel: SignInViewModel,
+    navController: NavController,
+
 
 
 ){
+    val signName by signInViewModel.name.collectAsState()
+    val signEmail by signInViewModel.email.collectAsState()
+    val phoneNumber by signInViewModel.phoneNumber.collectAsState()
+    val signPassword by signInViewModel.password.collectAsState()
+    val passwordsDone by signInViewModel.passwordDone.collectAsState()
 
     val isSuccess by LogInViewModel.isSuccess.collectAsState()
-
     val email by LogInViewModel.email.collectAsState()
     val password by LogInViewModel.password.collectAsState()
 
 
     Button(
         onClick = {
-            if (email=="" || password=="") {
-                PopUpViewModel.showDialog()
-            } else {
-                val request = EmailLogInRequest(email, password)
-                LogInViewModel.postLoginData(request, navController, PopUpViewModel)
+            if (type == "login") {
+                if (email == "" || password == "") {
+                    PopUpViewModel.showDialog()
+                } else {
+                    val request = EmailLogInRequest(email, password)
+                    LogInViewModel.postLoginData(request, navController, PopUpViewModel)
 
+                }
+            } else if (type == "goSign"){
+                navController.navigate(Screen.Signin.route)
+            } else{
+                if(signName!= "" && signEmail != "" && phoneNumber != "" && passwordsDone){
+                    signInViewModel.fetchSignInSuccess()
+                    PopUpViewModel.showDialog()
+                    navController.navigate(Screen.Login.route)
+                }
+                else {
+
+                }
             }
         },
         colors = ButtonDefaults.buttonColors(

@@ -20,18 +20,21 @@ class AuthInterceptor @Inject constructor(
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
+        val encodedPath = originalRequest.url.encodedPath
+
 
         // ✅ DataStore에서 Access Token 가져오기
         val accessToken = runBlocking { authRepository.accessToken.first() }
 
         // ✅ 특정 API 요청에만 토큰을 추가하도록 설정
-        val shouldAttachToken = originalRequest.url.encodedPath in listOf(
-            "login", "mypage"
-        )
+        val shouldAttachToken = encodedPath.startsWith("/mypage/") || encodedPath in listOf( "/login")
 
         val requestBuilder: Request.Builder = originalRequest.newBuilder()
         if (shouldAttachToken && !accessToken.isNullOrEmpty()) {
-            requestBuilder.addHeader("Authorization", "Bearer $accessToken")
+            requestBuilder.addHeader("Authorization", "$accessToken")
+            Log.d("AuthInterceptor", "$accessToken")
+        }else{
+            Log.d("AuthInterceptor", "토큰 안 붙이고 보냄")
         }
 
         val response = chain.proceed(requestBuilder.build())

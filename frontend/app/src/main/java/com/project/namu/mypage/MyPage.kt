@@ -47,11 +47,13 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.project.namu.R
+import com.project.namu.model.LogInViewModel
 import com.project.namu.model.MyPageViewModel
 
 @Composable
 fun MyPage(
-    MyPageViewModel : MyPageViewModel
+    MyPageViewModel : MyPageViewModel,
+    logInViewModel: LogInViewModel
 ){
     Box(
         modifier = Modifier
@@ -60,7 +62,10 @@ fun MyPage(
         contentAlignment = Alignment.TopCenter
 
     ){
-        MyPageViewModel.fetchMyPageData(1)
+        val user_id by logInViewModel.userId.collectAsState()
+
+        MyPageViewModel.fetchMyPageData(user_id)
+
         val isOrderMessage by MyPageViewModel.isOrderMessage.collectAsState()
         val profile_url by MyPageViewModel.profile_url.collectAsState()
         val user_name by MyPageViewModel.user_name.collectAsState()
@@ -514,3 +519,8 @@ fun SettingButton(
     }
 }
 
+@Preview
+@Composable
+fun MyPagePreview(){
+
+}

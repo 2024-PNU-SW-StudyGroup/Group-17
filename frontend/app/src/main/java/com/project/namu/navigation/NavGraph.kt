@@ -28,8 +28,8 @@ fun NavGraph(navController: NavHostController, startDestination: String = Screen
         navController = navController,
         startDestination = startDestination
     ){
-        composable(Screen.Login.route) { Login(PopUpViewModel = popUpViewModel, LogInViewModel = logInViewModel, navController)}
-        composable(Screen.Signin.route) { SignIn(popUpViewModel = popUpViewModel, signInViewModel = signInViewModel, navController) }
-        composable(Screen.MyPage.route) { MyPage(MyPageViewModel = myPageViewModel ) }
+        composable(Screen.Login.route) { Login(PopUpViewModel = popUpViewModel, LogInViewModel = logInViewModel, navController, signInViewModel = signInViewModel)}
+        composable(Screen.Signin.route) { SignIn(popUpViewModel = popUpViewModel, signInViewModel = signInViewModel, navController = navController, logInViewModel = logInViewModel) }
+        composable(Screen.MyPage.route) { MyPage(MyPageViewModel = myPageViewModel, logInViewModel= logInViewModel ) }
     }
 }

@@ -48,13 +48,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.project.namu.R
 import com.project.namu.model.LogInViewModel
+import com.project.namu.model.SignInViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Login(
     PopUpViewModel: PopUpViewModel,
     LogInViewModel: LogInViewModel,
-    navController: NavController
+    navController: NavController,
+    signInViewModel: SignInViewModel
 ){
 
 
@@ -173,7 +175,7 @@ fun Login(
 
         //if(email == "" || password == "" || isLogInSuccess == false) {
 
-            LogSignButton(type = "login", color = "green", PopUpViewModel = PopUpViewModel, LogInViewModel = LogInViewModel, navController)
+            LogSignButton(type = "login", color = "green", PopUpViewModel = PopUpViewModel, LogInViewModel = LogInViewModel, signInViewModel = signInViewModel, navController)
 
 
         Text(
@@ -225,7 +227,7 @@ fun Login(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        LogSignButton(type = "signin", color = "white", PopUpViewModel = PopUpViewModel, LogInViewModel = LogInViewModel, navController)
+        LogSignButton(type = "goSign", color = "white", PopUpViewModel = PopUpViewModel, LogInViewModel = LogInViewModel, signInViewModel = signInViewModel, navController = navController )
     }
 
 }
