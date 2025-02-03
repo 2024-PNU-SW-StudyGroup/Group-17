@@ -22,8 +22,8 @@ class LogInViewModel @Inject constructor(
     private val _isSuccess = MutableStateFlow<Boolean>(false)
     val isSuccess : StateFlow<Boolean> = _isSuccess
 
-    private val _userID = MutableStateFlow<Int>(0)
-    val userID : StateFlow<Int> = _userID
+    private val _userId = MutableStateFlow<Int>(0)
+    val userId : StateFlow<Int> = _userId
 
     private val _email = MutableStateFlow("")
     val email: StateFlow<String> = _email
@@ -49,7 +49,6 @@ class LogInViewModel @Inject constructor(
         viewModelScope.launch {
             try {
 
-                // ✅ 기존 AT가 없거나 만료된 경우에만 로그인 요청 진행
                     val apiService = ApiClient.getInstance(authRepository, authInterceptor)
                     val response = apiService.logInRequest(request)
 
@@ -57,6 +56,8 @@ class LogInViewModel @Inject constructor(
                     authRepository.saveToken(response.data.accessToken, response.data.refreshToken)
 
                     _isSuccess.value = true
+
+                    _userId.value = response.data.userId
 
                     // ✅ 성공 로그 및 이동
                     Log.d("LogInViewModel", "서버 응답 성공: $response")

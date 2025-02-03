@@ -35,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.project.namu.R
 
 
@@ -42,7 +43,8 @@ import com.project.namu.R
 @Composable
 fun PopUp(
     text : String,
-    viewModel : PopUpViewModel
+    viewModel : PopUpViewModel,
+    navController: NavController
 ){
 
         AlertDialog(
@@ -54,7 +56,7 @@ fun PopUp(
 
                 .padding(start = 40.dp, top = 27.dp, end = 40.dp, bottom = 28.dp)
         ) {
-            DialogContent(text, viewModel)
+            DialogContent(text, viewModel, navController)
         }
 
 }
@@ -63,7 +65,8 @@ fun PopUp(
 @Composable
 fun DialogContent(
     text : String,
-    viewModel: PopUpViewModel
+    viewModel: PopUpViewModel,
+    navController: NavController
 ){
 Column (
     modifier= Modifier
@@ -95,8 +98,7 @@ Column (
 
     Button(
         onClick = {
-
-                  viewModel.hideDialog()
+                  viewModel.hideDialog(navController = navController)
             Log.d("PopUp", "버튼 클릭")
 
 
@@ -129,8 +131,3 @@ Column (
 
 
 
-@Preview
-@Composable
-fun PopUpPreview(){
-    PopUp(viewModel = PopUpViewModel(), text = "회원가입이 완료되었습니다.")
-}

@@ -48,13 +48,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.project.namu.R
 import com.project.namu.model.LogInViewModel
+import com.project.namu.model.SignInViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Login(
     PopUpViewModel: PopUpViewModel,
     LogInViewModel: LogInViewModel,
-    navController: NavController
+    navController: NavController,
+    signInViewModel: SignInViewModel
 ){
 
 
@@ -62,7 +64,7 @@ fun Login(
 
     val isDialogVisible by PopUpViewModel.isDialogVisible.collectAsState()
     if(isDialogVisible){
-        PopUp(text = "아이디 또는 비밀번호를\n 확인해 주세요.", viewModel = PopUpViewModel)
+        PopUp(text = "아이디 또는 비밀번호를\n 확인해 주세요.", viewModel = PopUpViewModel, navController)
     }
     Column(
         modifier = Modifier
@@ -173,7 +175,7 @@ fun Login(
 
         //if(email == "" || password == "" || isLogInSuccess == false) {
 
-            LogSignButton(type = "login", color = "green", PopUpViewModel = PopUpViewModel, LogInViewModel = LogInViewModel, navController)
+            LogSignButton(type = "login", color = "green", popUpViewModel = PopUpViewModel, LogInViewModel = LogInViewModel, signInViewModel = signInViewModel, navController)
 
 
         Text(
@@ -225,7 +227,7 @@ fun Login(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        LogSignButton(type = "signin", color = "white", PopUpViewModel = PopUpViewModel, LogInViewModel = LogInViewModel, navController)
+        LogSignButton(type = "goSign", color = "white", popUpViewModel = PopUpViewModel, LogInViewModel = LogInViewModel, signInViewModel = signInViewModel, navController = navController )
     }
 
 }

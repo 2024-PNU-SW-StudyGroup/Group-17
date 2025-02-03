@@ -13,6 +13,7 @@ data class EmailLogInResponse(
 )
 
 data class Data (
+    val userId : Int,
     val accessToken : String,
     val refreshToken : String
 )

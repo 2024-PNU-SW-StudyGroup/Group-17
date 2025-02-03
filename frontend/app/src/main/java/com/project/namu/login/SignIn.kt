@@ -51,20 +51,28 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.project.namu.R
 import com.project.namu.model.EmailSignInRequest
+import com.project.namu.model.LogInViewModel
 import com.project.namu.model.SignInViewModel
 
 @Composable
 fun SignIn(
     popUpViewModel: PopUpViewModel,
     signInViewModel: SignInViewModel,
-    navController: NavController
+    navController: NavController,
+    logInViewModel: LogInViewModel
 ){
     val isDialogVisible by popUpViewModel.isDialogVisible.collectAsState()
     val signInMessage by signInViewModel.signInMessage.collectAsState()
 
+    // ✅ ViewModel에서 값 가져오기 (자동 업데이트됨)
+    val name by signInViewModel.name.collectAsState()
+    val email by signInViewModel.email.collectAsState()
+    val phoneNumber by signInViewModel.phoneNumber.collectAsState()
+    val password by signInViewModel.password.collectAsState()
+    val passwordDone by signInViewModel.passwordDone.collectAsState()
 
     if(isDialogVisible){
-        PopUp( text = "회원가입이 완료되었어요.", viewModel = popUpViewModel, )
+        PopUp( text = signInMessage, viewModel = popUpViewModel, navController)
     }
     Column(
         modifier = Modifier
@@ -97,13 +105,7 @@ fun SignIn(
         )
 
         Spacer(modifier= Modifier.height(50.dp))
-        var name by remember { mutableStateOf("") }
-        var email by remember { mutableStateOf("") }
-        var phoneNumber by remember { mutableStateOf("") }
-        var passwords by remember { mutableStateOf("dsd") }
-        var passwordsDone by remember { mutableStateOf(false) }
 
-        val signInRequest = EmailSignInRequest(user_name = name, password = passwords, email = email )
 
 
         Column(
@@ -121,7 +123,7 @@ fun SignIn(
             InformationTextField(
                 textfield = "Name",
                 text = name,
-                textUpdate = { newText -> name = newText }
+                textUpdate = { newText -> signInViewModel.updateName(newText)  }
                 )
 
             TextFieldName(text = "  전화번호")
@@ -130,9 +132,11 @@ fun SignIn(
                 text = phoneNumber,
                 textUpdate = { newText ->
                     // 최대 글자 수는 숫자 기준 11자리 (하이픈 제외)
+
+                   signInViewModel.updatePhoneNumber(newText)
                     val digits = newText.filter { it.isDigit() }
                     if (digits.length <= 11) {
-                        phoneNumber = digits
+                        signInViewModel.updatePhoneNumber(newText)
  }}
             )
 
@@ -141,35 +145,26 @@ fun SignIn(
             InformationTextField(
                 textfield = "E-mail",
                 text = email,
-                textUpdate= { newText -> email = newText }
+                textUpdate= { newText -> signInViewModel.updateEmail(newText) }
 
             )
 
             PasswordTextFields(
-                passwordsDone = { isMatch -> passwordsDone = isMatch},
-                passwordsRequest = { finalPasswords -> passwords = finalPasswords}
+                signInViewModel = signInViewModel
             )
         }
         Spacer(modifier = Modifier.height(30.dp))
 
-        /*
-        if(name != "" && email != "" && phoneNumber != "" && passwordsDone){
-            signInViewModel.fetchSignInSuccess(signInRequest)
-            if(signInMessage == "success"){
-            LogSignButton(type = "signin", color = "green", PopUpViewModel = popUpViewModel, LogInViewModel = )}
-            else{  LogSignButton(type = "signin", color = "green", viewModel = popUpViewModel)}
-            }
 
-        else{
-        LogSignButton(type = "signin", color = "green", viewModel = popUpViewModel)}
-*/
+        LogSignButton(type = "signin", color = "green", popUpViewModel = popUpViewModel, LogInViewModel = logInViewModel, signInViewModel = signInViewModel, navController = navController)}
+
         Spacer(modifier = Modifier.height(30.dp))
 
 
 
 
     }
-}
+
 
 @Composable
 fun TextFieldName(
@@ -318,11 +313,11 @@ fun InformationTextField(
 
 @Composable
 fun PasswordTextFields(
-
-    passwordsDone : (Boolean) -> Unit,
-    passwordsRequest : (String) -> Unit
+    signInViewModel: SignInViewModel
 ){
-    var password by remember { mutableStateOf("") }
+    val password by signInViewModel.password.collectAsState()
+    val passwordDone by signInViewModel.passwordDone.collectAsState()
+
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -333,7 +328,8 @@ fun PasswordTextFields(
 
     TextField(
         value = password,
-        onValueChange = { password = it },
+        onValueChange = { newPassword ->
+            signInViewModel.updatePassword(newPassword) },
         label = { Text(
             text = "Password",
             style = TextStyle(
@@ -446,8 +442,7 @@ fun PasswordTextFields(
             isError = true
         }
         else {
-            passwordsDone(true)
-            passwordsRequest(confirmPassword)
+            signInViewModel.setPasswordDone(true)
         }
     }
 
