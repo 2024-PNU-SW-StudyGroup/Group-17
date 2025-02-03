@@ -3,6 +3,7 @@ package com.project.namu.model
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.project.namu.login.PopUpViewModel
 import com.project.namu.network.ApiClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +18,7 @@ class SignInViewModel @Inject constructor(
 ):ViewModel() {
     private val apiService = ApiClient.getInstance(authRepository, authInterceptor)
 
-    private val _signInMessage = MutableStateFlow<String> ("")
+    private val _signInMessage = MutableStateFlow<String> ("fail")
     val signInMessage : StateFlow<String> = _signInMessage
 
     private val _name = MutableStateFlow("")
@@ -56,17 +57,27 @@ class SignInViewModel @Inject constructor(
         _passwordDone.value = isDone
     }
 
+    fun successSignInMessage(alertMessage : String){
+        if (alertMessage == "success"){
+            _signInMessage.value = "회원가입이 완료되었어요."
+        }
+        else{
+            _signInMessage.value =  "아이디 또는 비밀번호를\n 확인해 주세요."
+        }
+    }
+
     fun fetchSignInSuccess(){
-        val request = EmailSignInRequest(user_name = _name.value, password = _password.value, email = _email.value )
+        val request = EmailSignInRequest(userName = _name.value, password = _password.value, email = _email.value )
         viewModelScope.launch {
             try{
                  apiService.signUpRequest(request)
                 Log.d("sign","$request")
-                _signInMessage.value = "success"
+
+
 
             } catch (e : Exception){
 
-                _signInMessage.value = "fail"
+
 
             }
 

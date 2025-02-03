@@ -64,7 +64,7 @@ fun Login(
 
     val isDialogVisible by PopUpViewModel.isDialogVisible.collectAsState()
     if(isDialogVisible){
-        PopUp(text = "아이디 또는 비밀번호를\n 확인해 주세요.", viewModel = PopUpViewModel)
+        PopUp(text = "아이디 또는 비밀번호를\n 확인해 주세요.", viewModel = PopUpViewModel, navController)
     }
     Column(
         modifier = Modifier
@@ -175,7 +175,7 @@ fun Login(
 
         //if(email == "" || password == "" || isLogInSuccess == false) {
 
-            LogSignButton(type = "login", color = "green", PopUpViewModel = PopUpViewModel, LogInViewModel = LogInViewModel, signInViewModel = signInViewModel, navController)
+            LogSignButton(type = "login", color = "green", popUpViewModel = PopUpViewModel, LogInViewModel = LogInViewModel, signInViewModel = signInViewModel, navController)
 
 
         Text(
@@ -227,7 +227,7 @@ fun Login(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        LogSignButton(type = "goSign", color = "white", PopUpViewModel = PopUpViewModel, LogInViewModel = LogInViewModel, signInViewModel = signInViewModel, navController = navController )
+        LogSignButton(type = "goSign", color = "white", popUpViewModel = PopUpViewModel, LogInViewModel = LogInViewModel, signInViewModel = signInViewModel, navController = navController )
     }
 
 }

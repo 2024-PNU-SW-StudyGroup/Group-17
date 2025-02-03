@@ -72,7 +72,7 @@ fun SignIn(
     val passwordDone by signInViewModel.passwordDone.collectAsState()
 
     if(isDialogVisible){
-        PopUp( text = "회원가입이 완료되었어요.", viewModel = popUpViewModel, )
+        PopUp( text = signInMessage, viewModel = popUpViewModel, navController)
     }
     Column(
         modifier = Modifier
@@ -156,7 +156,7 @@ fun SignIn(
         Spacer(modifier = Modifier.height(30.dp))
 
 
-        LogSignButton(type = "signin", color = "green", PopUpViewModel = popUpViewModel, LogInViewModel = logInViewModel, signInViewModel = signInViewModel, navController = navController)}
+        LogSignButton(type = "signin", color = "green", popUpViewModel = popUpViewModel, LogInViewModel = logInViewModel, signInViewModel = signInViewModel, navController = navController)}
 
         Spacer(modifier = Modifier.height(30.dp))
 

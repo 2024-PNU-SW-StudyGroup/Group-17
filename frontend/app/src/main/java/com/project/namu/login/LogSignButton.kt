@@ -11,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -31,19 +32,23 @@ import com.project.namu.navigation.Screen
 fun LogSignButton(
     type: String,
     color: String,
-    PopUpViewModel: PopUpViewModel,
+    popUpViewModel: PopUpViewModel,
     LogInViewModel : LogInViewModel,
     signInViewModel: SignInViewModel,
     navController: NavController,
 
-
-
 ){
+
+
     val signName by signInViewModel.name.collectAsState()
     val signEmail by signInViewModel.email.collectAsState()
     val phoneNumber by signInViewModel.phoneNumber.collectAsState()
     val signPassword by signInViewModel.password.collectAsState()
     val passwordsDone by signInViewModel.passwordDone.collectAsState()
+
+
+    val isDialogVisible by popUpViewModel.isDialogVisible.collectAsState()
+    val toLogin by popUpViewModel.toLogin.collectAsState()
 
     val isSuccess by LogInViewModel.isSuccess.collectAsState()
     val email by LogInViewModel.email.collectAsState()
@@ -54,21 +59,28 @@ fun LogSignButton(
         onClick = {
             if (type == "login") {
                 if (email == "" || password == "") {
-                    PopUpViewModel.showDialog()
+                    popUpViewModel.showDialog()
                 } else {
                     val request = EmailLogInRequest(email, password)
-                    LogInViewModel.postLoginData(request, navController, PopUpViewModel)
+                    LogInViewModel.postLoginData(request, navController, popUpViewModel)
 
                 }
             } else if (type == "goSign"){
                 navController.navigate(Screen.Signin.route)
             } else{
-                if(signName!= "" && signEmail != "" && phoneNumber != "" && passwordsDone){
+                if(signName!= "" && signEmail != "" && phoneNumber != "" ){
                     signInViewModel.fetchSignInSuccess()
-                    PopUpViewModel.showDialog()
-                    navController.navigate(Screen.Login.route)
+                    signInViewModel.successSignInMessage("success")
+                    popUpViewModel.accessToLogin()
+                    popUpViewModel.showDialog()
+
+
+
+
                 }
                 else {
+                    signInViewModel.successSignInMessage("fail")
+                    popUpViewModel.showDialog()
 
                 }
             }
@@ -91,6 +103,7 @@ fun LogSignButton(
             ),
         contentPadding = PaddingValues(0.dp),
 
+
     ){
 
 
@@ -109,4 +122,5 @@ fun LogSignButton(
 
     }
 }
+
 

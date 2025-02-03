@@ -1,7 +1,7 @@
 package com.project.namu.model
 
 data class EmailSignInRequest(
-    val user_name : String,
+    val userName : String,
     val password : String,
     val email : String
 )
