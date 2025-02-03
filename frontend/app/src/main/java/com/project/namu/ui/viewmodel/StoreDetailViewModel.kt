@@ -1,18 +1,26 @@
 package com.project.namu.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.namu.data.model.StoreDetailData
 import com.project.namu.data.remote.RetrofitInstance
 import com.project.namu.data.repository.StoreRepository
+import com.project.namu.model.AuthInterceptor
+import com.project.namu.model.AuthRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class StoreDetailViewModel : ViewModel() {
+// ✅ Hilt ViewModel로 변경
+@HiltViewModel
+class StoreDetailViewModel @Inject constructor(
+    authRepository: AuthRepository,
+    authInterceptor: AuthInterceptor
+) : ViewModel() {
 
-    private val repository = StoreRepository(RetrofitInstance.apiService)
+    private val repository = StoreRepository(RetrofitInstance.getInstance(authRepository, authInterceptor))
 
     private val _uiState = MutableStateFlow<StoreDetailUiState>(StoreDetailUiState.Loading)
     val uiState: StateFlow<StoreDetailUiState> = _uiState
@@ -37,7 +45,6 @@ class StoreDetailViewModel : ViewModel() {
         }
     }
 }
-
 
 sealed class StoreDetailUiState {
     object Loading : StoreDetailUiState()

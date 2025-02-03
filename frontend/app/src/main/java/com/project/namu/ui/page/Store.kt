@@ -49,6 +49,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.project.namu.R
@@ -64,9 +65,8 @@ import com.project.namu.ui.viewmodel.StoreDetailViewModel
 fun StoreScreen(
     navController: NavController,
     storeId: Int,
-    viewModel: StoreDetailViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: StoreDetailViewModel = hiltViewModel() // ✅ Hilt ViewModel로 변경
 ) {
-    Log.d("DEBUG", "StoreScreen started with storeId=$storeId")
 
     val uiState by viewModel.uiState.collectAsState()
 
@@ -172,7 +172,7 @@ fun Store_Pager(imageUrls: List<String>) {
             horizontalArrangement = Arrangement.End
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_shopping),
+                painter = painterResource(id = R.drawable.leaves),
                 contentDescription = "장바구니",
                 tint = Color.White,
                 modifier = Modifier
@@ -248,7 +248,7 @@ fun Store_Detail(
             // 가게 전화번호
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
-                    painter = painterResource(id = R.drawable.card_clock),
+                    painter = painterResource(id = R.drawable.time),
                     contentDescription = "phonenumber",
                     modifier = Modifier.size(18.dp)
                 )
@@ -266,7 +266,7 @@ fun Store_Detail(
 // 위치
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
-                    painter = painterResource(id = R.drawable.card_location),
+                    painter = painterResource(id = R.drawable.map),
                     contentDescription = "location",
                     modifier = Modifier.size(18.dp)
                 )

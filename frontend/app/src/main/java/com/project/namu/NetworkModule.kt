@@ -8,7 +8,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
-import com.project.namu.network.ApiService
+import com.project.namu.data.remote.ApiService
 import com.project.namu.model.AuthInterceptor
 import com.project.namu.model.AuthRepository
 

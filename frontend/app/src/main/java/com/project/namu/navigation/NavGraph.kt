@@ -4,8 +4,10 @@ package com.project.namu.navigation
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.project.namu.login.Login
 import com.project.namu.login.PopUpViewModel
 import com.project.namu.login.SignIn
@@ -13,6 +15,9 @@ import com.project.namu.model.LogInViewModel
 import com.project.namu.model.MyPageViewModel
 import com.project.namu.model.SignInViewModel
 import com.project.namu.mypage.MyPage
+import com.project.namu.ui.page.HomeScreen
+import com.project.namu.ui.page.Search_listScreen
+import com.project.namu.ui.page.StoreScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @Composable
@@ -31,5 +36,16 @@ fun NavGraph(navController: NavHostController, startDestination: String = Screen
         composable(Screen.Login.route) { Login(PopUpViewModel = popUpViewModel, LogInViewModel = logInViewModel, navController)}
         composable(Screen.Signin.route) { SignIn(popUpViewModel = popUpViewModel, signInViewModel = signInViewModel, navController) }
         composable(Screen.MyPage.route) { MyPage(MyPageViewModel = myPageViewModel ) }
+        composable(Screen.Home.route) { HomeScreen(navController) }
+        composable(Screen.Search.route) { Search_listScreen(navController) }
+
+        // 가게 상세 화면 (storeId를 Path 파라미터로 받아옴)
+        composable(
+            route = "가게상세/{storeId}",
+            arguments = listOf(navArgument("storeId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val storeId = backStackEntry.arguments?.getInt("storeId") ?: 0
+            StoreScreen(navController = navController, storeId = storeId)
+        }
     }
 }

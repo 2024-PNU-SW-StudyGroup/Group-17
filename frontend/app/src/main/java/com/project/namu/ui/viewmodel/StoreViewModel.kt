@@ -4,10 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.namu.data.model.StoreData
 import com.project.namu.data.repository.StoreRepository
-import com.project.namu.data.remote.RetrofitInstance
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
+import com.project.namu.model.AuthRepository
+import com.project.namu.model.AuthInterceptor
+import com.project.namu.data.remote.RetrofitInstance
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 sealed class StoreUiState {
     object Loading : StoreUiState()
@@ -15,9 +19,13 @@ sealed class StoreUiState {
     data class Error(val message: String) : StoreUiState()
 }
 
-class StoreViewModel : ViewModel() {
+@HiltViewModel
+class StoreViewModel @Inject constructor(
+    authRepository: AuthRepository,
+    authInterceptor: AuthInterceptor
+) : ViewModel() {
 
-    private val repository = StoreRepository(RetrofitInstance.apiService)
+    private val repository = StoreRepository(RetrofitInstance.getInstance(authRepository, authInterceptor))
 
     private val _uiState = mutableStateOf<StoreUiState>(StoreUiState.Loading)
     val uiState: State<StoreUiState> get() = _uiState
@@ -31,8 +39,7 @@ class StoreViewModel : ViewModel() {
             try {
                 val response = repository.getStoreList()
                 if (response.isSuccessful) {
-                    // response.body()가 곧 List<StoreData>이므로, null 처리
-                    val storeList = response.body() ?: emptyList()
+                    val storeList = response.body() ?: emptyList() // ✅ null 안전 처리
                     _uiState.value = StoreUiState.Success(storeList)
                 } else {
                     _uiState.value = StoreUiState.Error("서버 오류: ${response.code()}")

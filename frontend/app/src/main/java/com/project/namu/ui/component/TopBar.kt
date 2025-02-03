@@ -68,7 +68,7 @@ fun SearchTopBar(
                 }
                 if (notificationVisible) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_notification), // 알림 아이콘
+                        painter = painterResource(id = R.drawable.map), // 알림 아이콘
                         contentDescription = "Notification Icon",
                         tint = Color.Black,
                         modifier = Modifier.size(24.dp) // 원하는 크기로 조정 (예: 24.dp)
@@ -88,7 +88,7 @@ fun SearchTopBar(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.search), // 검색 아이콘
+                    painter = painterResource(id = R.drawable.map), // 검색 아이콘
                     contentDescription = "Search Icon",
                     tint = Color.Black,
                     modifier = Modifier.size(20.dp) // 원하는 크기로 조정

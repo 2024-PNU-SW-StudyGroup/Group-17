@@ -45,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.project.namu.R
@@ -59,18 +60,19 @@ import com.project.namu.ui.viewmodel.StoreViewModel
 fun Search_listScreen(navController: NavController) {
     var selectedIndex by remember { mutableStateOf(0) }
 
+    // ✅ StoreViewModel을 Hilt를 이용해 가져오기
+    val storeViewModel: StoreViewModel = hiltViewModel()
+
     Scaffold(
         topBar = {
             SearchTopBar(
                 onSearch = { /* 검색 처리 로직 */ },
                 additionalContent = { FilterButtonRow() },
-                notificationVisible = false // 여기서 알림 아이콘 표시 여부를 결정
+                notificationVisible = false // 알림 아이콘 표시 여부
             )
-
         },
 
         bottomBar = {
-
             BottomNav(
                 navController = navController,
                 selectedIndex = selectedIndex,
@@ -78,13 +80,12 @@ fun Search_listScreen(navController: NavController) {
                     selectedIndex = index
                 }
             )
-
         },
 
         content = { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {
-                // 메인 콘텐츠
-                Search_listContent(navController = navController)
+                // ✅ StoreViewModel을 Search_listContent에 전달
+                Search_listContent(navController = navController, viewModel = storeViewModel)
             }
         }
     )
@@ -93,7 +94,7 @@ fun Search_listScreen(navController: NavController) {
 @Composable
 fun Search_listContent(
     navController: NavController, // ← NavController를 인자로 받아서
-    viewModel: StoreViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: StoreViewModel // ✅ ViewModel을 매개변수로 받음
 ) {
     val uiState by viewModel.uiState
 
@@ -144,13 +145,13 @@ fun FilterButtonRow() {
     ) {
         SortButton()
         Spacer(modifier = Modifier.width(4.dp))
-        FilterButton(image = R.drawable.filter_star, text = "별점")
+        FilterButton(image = R.drawable.star, text = "별점")
         Spacer(modifier = Modifier.width(4.dp))
-        FilterButton(image = R.drawable.filter_price, text = "가격대")
+        FilterButton(image = R.drawable.message, text = "가격대")
         Spacer(modifier = Modifier.width(4.dp))
-        FilterButton(image = R.drawable.filter_time, text = "픽업시간대")
+        FilterButton(image = R.drawable.time, text = "픽업시간대")
         Spacer(modifier = Modifier.width(4.dp))
-        FilterButton(image = R.drawable.filter_location, text = "거리")
+        FilterButton(image = R.drawable.location, text = "거리")
 
     }
 }
@@ -165,7 +166,7 @@ fun SortButton() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = painterResource(id = R.drawable.filter_sort ),
+            painter = painterResource(id = R.drawable.usermanage ),
             contentDescription = "기본순",
             modifier = Modifier.size(14.dp)
         )
@@ -308,7 +309,7 @@ fun StoreCardWithDetails(storeData: StoreData, navController: NavController) {
 
                     Row( verticalAlignment = Alignment.CenterVertically ) {
                         Icon(
-                            painter = painterResource(id = R.drawable.card_clock),
+                            painter = painterResource(id = R.drawable.time),
                             contentDescription = "Time",
                             tint = Color(0xFF00BCD4),
                             modifier = Modifier.size(16.dp)
@@ -319,7 +320,7 @@ fun StoreCardWithDetails(storeData: StoreData, navController: NavController) {
                         Spacer(modifier = Modifier.width(8.dp))
 
                         Icon(
-                            painter = painterResource(id = R.drawable.card_location),
+                            painter = painterResource(id = R.drawable.map),
                             contentDescription = "Location",
                             tint = Color(0xFF00BCD4),
                             modifier = Modifier.size(16.dp)

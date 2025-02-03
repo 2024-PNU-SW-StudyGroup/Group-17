@@ -171,7 +171,7 @@ fun BookmarkItem() {
                 modifier = Modifier.fillMaxSize()
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.apple),
+                    painter = painterResource(id = R.drawable.examplefood),
                     contentDescription = "예시 사진",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -230,7 +230,7 @@ fun BookmarkItem() {
 
                     Row {
                         Image(
-                            painter = painterResource(id = R.drawable.card_clock),
+                            painter = painterResource(id = R.drawable.time),
                             contentDescription = "영업 시간",
                             modifier = Modifier
                                 .size(8.dp)

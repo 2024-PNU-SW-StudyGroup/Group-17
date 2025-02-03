@@ -6,11 +6,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.project.namu.login.PopUpViewModel
 import com.project.namu.navigation.Screen
-import com.project.namu.network.ApiClient
+import com.project.namu.data.remote.ApiClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -61,7 +60,7 @@ class LogInViewModel @Inject constructor(
 
                     // ✅ 성공 로그 및 이동
                     Log.d("LogInViewModel", "서버 응답 성공: $response")
-                    navController.navigate(Screen.MyPage.route)
+                    navController.navigate(Screen.Search.route)
 
 
             } catch (e: HttpException) { // 4xx, 5xx 오류 처리

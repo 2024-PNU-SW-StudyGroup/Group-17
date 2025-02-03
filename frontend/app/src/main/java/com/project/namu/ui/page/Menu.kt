@@ -206,13 +206,14 @@ fun Menu_Image() {
                 horizontalArrangement = Arrangement.End
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_shopping),
+                    painter = painterResource(id = R.drawable.map),
                     contentDescription = "장바구니",
                     tint = Color.White,
                     modifier = Modifier
                         .padding(8.dp)
                         .size(28.dp)
                 )
+
                 Icon(
                     imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                     contentDescription = "Like",

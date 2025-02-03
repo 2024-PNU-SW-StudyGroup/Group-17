@@ -1,9 +1,6 @@
 package com.project.namu.model
 
-import android.content.Context
-import android.util.Log
-import com.project.namu.network.ApiService
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.project.namu.data.remote.ApiService
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
