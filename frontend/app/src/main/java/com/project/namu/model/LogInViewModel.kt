@@ -6,14 +6,20 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.project.namu.login.PopUpViewModel
 import com.project.namu.navigation.Screen
-import com.project.namu.network.namuService
+import com.project.namu.network.ApiClient
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import javax.inject.Inject
 
-class LogInViewModel : ViewModel(
-){
+@HiltViewModel
+class LogInViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
+    private val authInterceptor: AuthInterceptor // ✅ Interceptor 주입 추가// ✅ 토큰 관리
+) : ViewModel(){
     private val _isSuccess = MutableStateFlow<Boolean>(false)
     val isSuccess : StateFlow<Boolean> = _isSuccess
 
@@ -34,38 +40,41 @@ class LogInViewModel : ViewModel(
         _password.value = newPassword
     }
 
+    fun postLoginData(
+        request: EmailLogInRequest,
+        navController: NavController,
+        popUpViewModel: PopUpViewModel
+    ) {
+        Log.d("LogInViewModel", "로그인 시도 요청: $request")
 
-    fun postLoginData(request : EmailLogInRequest, navController: NavController, popUpViewModel: PopUpViewModel, authViewModel: AuthViewModel){
-        Log.d("LogInViewModel", "서버 응답 코드: $request")
         viewModelScope.launch {
-            try{
-                val response = namuService.logInRequest(request)
-                _isSuccess.value = true
+            try {
 
-                authViewModel.saveToken(response.data.accessToken, response.data.refreshToken)
+                // ✅ 기존 AT가 없거나 만료된 경우에만 로그인 요청 진행
+                    val apiService = ApiClient.getInstance(authRepository, authInterceptor)
+                    val response = apiService.logInRequest(request)
 
-                //_userID.value = response.userID
-                // ✅ 응답 바디 출력
-                Log.d("LogInViewModel", "서버 응답 성공: $response")
-                navController.navigate(Screen.Signin.route) // 성공하면 바로 이동
+                    // ✅ 새로운 AT & RT 저장
+                    authRepository.saveToken(response.data.accessToken, response.data.refreshToken)
 
-            } catch(e:HttpException){ //4xx 5xx 오류 처리
-                if (e.code() == 401 ){
-                    Log.e("LogInViewModel", "HT 오류 발생: ${e.code()} - ${e.message()}", e)
-                    _isSuccess.value = false
-                    popUpViewModel.showDialog()
+                    _isSuccess.value = true
 
-                }
+                    // ✅ 성공 로그 및 이동
+                    Log.d("LogInViewModel", "서버 응답 성공: $response")
+                    navController.navigate(Screen.MyPage.route)
+
+
+            } catch (e: HttpException) { // 4xx, 5xx 오류 처리
+                Log.e("LogInViewModel", "HTTP 오류 발생: ${e.code()} - ${e.message()}", e)
                 _isSuccess.value = false
                 popUpViewModel.showDialog()
-
-            }
-            catch (e:Exception){
+            } catch (e: Exception) {
                 Log.e("LogInViewModel", "네트워크 오류 또는 예외 발생: ${e.message}", e)
                 _isSuccess.value = false
-
-
+                popUpViewModel.showDialog()
             }
         }
     }
+
+
 }

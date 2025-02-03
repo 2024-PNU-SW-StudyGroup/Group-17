@@ -514,8 +514,3 @@ fun SettingButton(
     }
 }
 
-@Preview
-@Composable
-fun MyPagePreview(){
-    MyPage(MyPageViewModel())
-}

@@ -13,22 +13,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.project.namu.model.AuthViewModel
 import com.project.namu.model.EmailLogInRequest
 import com.project.namu.model.LogInViewModel
-import com.project.namu.navigation.Screen
 
 @Composable
 fun LogSignButton(
@@ -36,8 +30,7 @@ fun LogSignButton(
     color: String,
     PopUpViewModel: PopUpViewModel,
     LogInViewModel : LogInViewModel,
-    navController: NavController,
-    AuthViewModel : AuthViewModel
+    navController: NavController
 
 
 ){
@@ -54,7 +47,7 @@ fun LogSignButton(
                 PopUpViewModel.showDialog()
             } else {
                 val request = EmailLogInRequest(email, password)
-                LogInViewModel.postLoginData(request, navController, PopUpViewModel, AuthViewModel)
+                LogInViewModel.postLoginData(request, navController, PopUpViewModel)
 
             }
         },

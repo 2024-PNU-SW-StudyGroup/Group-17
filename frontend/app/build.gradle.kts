@@ -1,6 +1,10 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.dagger.hilt) //  Hilt 추가
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")//  kapt 플러그인 추가 (Hilt 컴파일러 사용을 위해 필요)
+
 }
 
 android {
@@ -40,7 +44,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.7"
     }
     packaging {
         resources {
@@ -71,5 +75,13 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
     implementation(libs.coil.compose)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler) //  Hilt 컴파일러 추가
+    implementation(libs.androidx.lifecycle.viewmodel.ktx) // ✅ ViewModel을 사용하기 위한 KTX 추가
+    implementation(libs.hilt.navigation.compose)
+    kapt(libs.kotlinx.metadata.jvm)
+    implementation(libs.okhttp)// okhttp
+    implementation(libs.okhttp.logging) // (선택) 네트워크 로그 확인용
+
 
 }
