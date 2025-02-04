@@ -58,7 +58,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.project.namu.R
 import com.project.namu.data.model.DetailMenu
 import com.project.namu.data.model.StoreDetailData
-import com.project.namu.ui.component.Store_SwitchBottomBar
+import com.project.namu.ui.component.StoreSwitchBottomBar
 import com.project.namu.ui.theme.BackGround
 import com.project.namu.ui.tools.PagerWithDotsIndicator
 import com.project.namu.ui.viewmodel.StoreDetailUiState
@@ -82,7 +82,7 @@ fun StoreScreen(
 
     Scaffold(
         topBar = { /* ... */ },
-        bottomBar = { Store_SwitchBottomBar(isAvailable = true) }
+        bottomBar = { StoreSwitchBottomBar(isAvailable = true, navController) }
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             when (uiState) {

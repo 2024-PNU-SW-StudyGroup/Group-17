@@ -24,6 +24,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.google.gson.annotations.SerializedName
 import com.project.namu.data.model.MenuDetailData
+import com.project.namu.ui.component.Menu_BottomBar
 import com.project.namu.ui.theme.Main100
 import com.project.namu.ui.theme.Ui_empty
 import com.project.namu.ui.viewmodel.MenuDetailUiState
@@ -43,7 +44,18 @@ fun MenuScreen(
 
     Scaffold(
         topBar = { /* 상단바 */ },
-        bottomBar = { /* 하단바 */ }
+        bottomBar = {
+            when (uiState) {
+                is MenuDetailUiState.Success -> {
+                    val menuDetail = (uiState as MenuDetailUiState.Success).data
+                    Menu_BottomBar(navController = navController, menuDetail = menuDetail)
+                }
+                else -> {
+                    // 로딩이나 에러 상태일 경우 기본 BottomBar (혹은 빈 공간) 처리
+                    Box(modifier = Modifier.height(0.dp))
+                }
+            }
+        }
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             when (uiState) {

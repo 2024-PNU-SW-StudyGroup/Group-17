@@ -34,11 +34,14 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ShapeDefaults.Medium
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.project.namu.CartManager
+import com.project.namu.data.model.MenuDetailData
+import com.project.namu.data.model.toCartItem
 import com.project.namu.ui.theme.GrayLine
 import com.project.namu.ui.theme.Main100
 import com.project.namu.ui.theme.Main300
@@ -161,20 +164,18 @@ fun BottomIcon(
 
 // 가게 준비 되었을때 가격확인 바텀바
 @Composable
-fun Store_AvailableBottomBar(navController: NavController) {
-    // CartManager.cartItems는 mutableStateListOf이므로 Compose가 recomposition 함
+fun StoreAvailableBottomBar(navController: NavController) {
     val totalPrice = CartManager.getTotalPrice()
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(80.dp)
-            .padding(16.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
             .background(
                 color = Color(0xFF4CAF50),
                 shape = RoundedCornerShape(16.dp)
             )
             .clickable {
-                // 장바구니(결제) 화면으로 이동
                 navController.navigate("cart")
             },
         contentAlignment = Alignment.Center
@@ -188,10 +189,34 @@ fun Store_AvailableBottomBar(navController: NavController) {
     }
 }
 
-
+@Composable
+fun StoreNotAvailableBottomBar() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .background(color = Color.LightGray, shape = RoundedCornerShape(16.dp)),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "아직 준비중이에요.",
+            color = Color.Black,
+            fontSize = 16.sp,
+        )
+    }
+}
 
 @Composable
-fun Menu_BottomBar(){
+fun StoreSwitchBottomBar(isAvailable: Boolean, navController: NavController) {
+    if (isAvailable) {
+        StoreAvailableBottomBar(navController = navController)
+    } else {
+        StoreNotAvailableBottomBar()
+    }
+}
+@Composable
+fun Menu_BottomBar(navController: NavController, menuDetail: MenuDetailData) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -206,8 +231,11 @@ fun Menu_BottomBar(){
                 .background(
                     color = Color(0xFF4CAF50),
                     shape = RoundedCornerShape(16.dp)
-                ) // Green background with rounded corners
-                .clickable { /* Handle click */ },
+                )
+                .clickable {
+                    // 메뉴 데이터를 CartManager에 추가
+                    CartManager.addItem(menuDetail.toCartItem())
+                },
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -217,8 +245,6 @@ fun Menu_BottomBar(){
                 fontWeight = FontWeight.Bold
             )
         }
-
-        Spacer(modifier = Modifier.height(52.dp))
     }
 }
 

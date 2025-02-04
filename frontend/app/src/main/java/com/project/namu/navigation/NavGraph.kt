@@ -1,6 +1,7 @@
 package com.project.namu.navigation
 
 
+import PaymentScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -41,6 +42,8 @@ fun NavGraph(navController: NavHostController, startDestination: String = Screen
         composable(Screen.Home.route) { HomeScreen(navController) }
         composable(Screen.Search.route) { Search_listScreen(navController) }
         composable(Screen.WishList.route) { WishListScreen(navController) }
+        composable("cart") { PaymentScreen(navController = navController) }
+
 
 
         // 가게 상세 화면 (storeId를 Path 파라미터로 받아옴)

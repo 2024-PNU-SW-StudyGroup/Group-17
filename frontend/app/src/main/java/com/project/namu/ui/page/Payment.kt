@@ -1,12 +1,17 @@
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -16,36 +21,167 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
+import com.project.namu.CartManager
+import com.project.namu.R
+import com.project.namu.data.model.CartItemModel
 import com.project.namu.ui.theme.BackGround
+import com.project.namu.ui.theme.Main100
 
 @Composable
-fun PaymentScreen() {
+fun PaymentScreen(navController: NavController) {
+    val cartItems = CartManager.cartItems  // mutableStateListOf이므로 상태 변경 시 재구성됨
+
     Surface(color = BackGround, modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize().padding(bottom = 16.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp, vertical = 8.dp) // 전체 contentPadding 통일
+        ) {
             TopBar()
             Spacer(modifier = Modifier.height(16.dp))
 
-            CartItem()
-            CartItem()
+            // 장바구니 아이템들을 LazyColumn으로 표시
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(cartItems) { item ->
+                    CartItem(cartItem = item)
+                }
+            }
             Spacer(modifier = Modifier.height(16.dp))
 
             RequestSection()
             Spacer(modifier = Modifier.height(16.dp))
-
             PaymentMethods()
             Spacer(modifier = Modifier.height(16.dp))
-
             CouponSection()
             Spacer(modifier = Modifier.height(16.dp))
+            PaymentSummary(navController)
+        }
+    }
+}
+    @Composable
+    fun CartItem(cartItem: CartItemModel) {
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
+    ) {
+        Row(modifier = Modifier.padding(16.dp)) {
+            // 상품 이미지
+            Image(
+                painter = rememberAsyncImagePainter(cartItem.imageUrl),
+                contentDescription = "Food Image",
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color.LightGray)
+                    .fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+            Spacer(modifier = Modifier.width(16.dp))
 
-            PaymentSummary()
+            // 상품 정보 및 수량 조절
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            ) {
+                // 상품명
+                Text(
+                    text = cartItem.name,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
+                // 상품 설명 (있을 경우)
+                cartItem.description?.let { description ->
+                    Text(
+                        text = description,
+                        fontSize = 12.sp,
+                        color = Color.Gray,
+                        lineHeight = 16.sp // 원하는 줄 간격 값으로 조절
+                    )
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+
+                // 가격 정보: 할인 가격이 있으면 할인 가격과 원래 가격(취소선) 표시
+                if (cartItem.discountPrice != null && cartItem.discountPrice < cartItem.price) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "${cartItem.discountPrice}원",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Main100
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "${cartItem.price}원",
+                            fontSize = 14.sp,
+                            color = Main100,
+                            textDecoration = TextDecoration.LineThrough
+                        )
+                    }
+                } else {
+                    Text(
+                        text = "${cartItem.price}원",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Green
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // 수량 조절 버튼
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .clip(RoundedCornerShape(12.dp))
+                        .border(1.dp, Color.LightGray, RoundedCornerShape(10.dp)) // 테두리 추가
+                        .padding(horizontal = 4.dp, vertical = 8.dp)
+                ) {
+                    // 감소 버튼
+                    Icon(
+                        painter = painterResource(id = R.drawable.minus),
+                        contentDescription = "Decrease",
+                        modifier = Modifier
+                            .size(14.dp)
+                            .clickable {
+                                if (cartItem.quantity > 1) {
+                                    cartItem.quantity--
+                                }
+                            }
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "${cartItem.quantity}",
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                        fontSize = 12.sp
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    // 증가 버튼
+                    Icon(
+                        painter = painterResource(id = R.drawable.plus),
+                        contentDescription = "Increase",
+                        modifier = Modifier
+                            .size(14.dp)
+                            .clickable {
+                                cartItem.quantity++
+                            }
+                    )
+                }
+            }
         }
     }
 }
@@ -57,7 +193,7 @@ fun TopBar() {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Column(modifier = Modifier.weight(1f)) {
                 Text("카페인중독 부산대점", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text("픽업 19:00 ~ 19:30  도보 3분  거리 257m", fontSize = 14.sp, color = Color.Gray)
+                Text("픽업 19:00 ~ 19:30  도보 3분", fontSize = 14.sp, color = Color.Gray)
             }
             Icon(
                 imageVector = Icons.Default.KeyboardArrowRight,
@@ -70,59 +206,13 @@ fun TopBar() {
 
 
 
-@Composable
-fun CartItem() {
-    Card(shape = RoundedCornerShape(12.dp), modifier = Modifier.fillMaxWidth()) {
-        Row(modifier = Modifier.padding(16.dp)) {
-            Image(
-                painter = painterResource(id = android.R.drawable.ic_menu_gallery),
-                contentDescription = "Food Image",
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(RoundedCornerShape(8.dp))
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-            ) {
-                Text("세트A", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text("애플 와플(1), 콘치폭 핫도그 (1)", fontSize = 14.sp, color = Color.Gray)
-                Spacer(modifier = Modifier.height(4.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("7,070원", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.Green)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("10,100원", fontSize = 14.sp, color = Color.Gray, textDecoration = TextDecoration.LineThrough)
-                }
-                // 오른쪽에 정렬하도록 align(Alignment.End) 추가
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(Color.LightGray)
-                        .padding(horizontal = 6.dp, vertical = 2.dp)
-                ) {
-                    IconButton(onClick = { /* 감소 로직 */ }, modifier = Modifier.size(24.dp)) {
-                        Text("-")
-                    }
-                    Text("1", modifier = Modifier.padding(horizontal = 4.dp), fontSize = 16.sp)
-                    IconButton(onClick = { /* 증가 로직 */ }, modifier = Modifier.size(24.dp)) {
-                        Text("+")
-                    }
-                }
-            }
-        }
-    }
-}
+
 
 @Composable
 fun RequestSection() {
-    Card(shape = RoundedCornerShape(8.dp), modifier = Modifier.fillMaxWidth()) {
-        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+    Card(shape = RoundedCornerShape(8.dp), modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),   colors = CardDefaults.cardColors(containerColor = Color.White)) {
+        Column(modifier = Modifier.padding(16.dp)) {
             Text("요청사항", fontWeight = FontWeight.Bold, fontSize = 16.sp)
-            Spacer(modifier = Modifier.weight(1f))
             Text(text = AnnotatedString("견과류 알레르기가 있어요."))
         }
     }
@@ -161,7 +251,7 @@ fun CouponSection() {
 }
 
 @Composable
-fun PaymentSummary() {
+fun PaymentSummary(navController: NavController) {
     Column {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text("주문 금액", fontSize = 16.sp)
@@ -176,14 +266,5 @@ fun PaymentSummary() {
             Text("13,140원", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.Green)
         }
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { /* 결제 로직 */ }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(8.dp)) {
-            Text("결제하기", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-        }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewPaymentScreen() {
-    PaymentScreen()
 }
