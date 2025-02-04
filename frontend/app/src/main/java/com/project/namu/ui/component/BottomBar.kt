@@ -35,8 +35,10 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Divider
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.project.namu.CartManager
 import com.project.namu.ui.theme.GrayLine
 import com.project.namu.ui.theme.Main100
 import com.project.namu.ui.theme.Main300
@@ -96,7 +98,7 @@ fun BottomNav(
                 selected = selectedIndex == 2,
                 action = {
                     onItemSelected(2)
-                    navController.navigate("마이페이지") {
+                    navController.navigate("mypage") {
                         popUpTo(navController.graph.startDestinationId)
                         launchSingleTop = true
                     }
@@ -159,7 +161,9 @@ fun BottomIcon(
 
 // 가게 준비 되었을때 가격확인 바텀바
 @Composable
-fun Store_AvailableBottomBar() {
+fun Store_AvailableBottomBar(navController: NavController) {
+    // CartManager.cartItems는 mutableStateListOf이므로 Compose가 recomposition 함
+    val totalPrice = CartManager.getTotalPrice()
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -168,58 +172,23 @@ fun Store_AvailableBottomBar() {
             .background(
                 color = Color(0xFF4CAF50),
                 shape = RoundedCornerShape(16.dp)
-            ) // Green background with rounded corners
-            .clickable { /* Handle click */ },
+            )
+            .clickable {
+                // 장바구니(결제) 화면으로 이동
+                navController.navigate("cart")
+            },
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "총 0원 - 장바구니 보기",
+            text = "총 ${totalPrice}원 - 장바구니 보기",
             color = Color.White,
             fontSize = 16.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = Bold
         )
     }
 }
 
-//가게 준비중일때 바텀바
-@Composable
-fun Store_NotAvailableBottomBar() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(80.dp)
-            .padding(20.dp)
-            .background(color = Color.White, shape = RoundedCornerShape(16.dp)), // Gray background with rounded corners
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = "아직 준비중이에요.",
-            color = Color.White,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium
-        )
-    }
-}
 
-//가게 영업상태에 따른 스위치 바텀바
-@Composable
-fun Store_SwitchBottomBar(isAvailable: Boolean) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = Color.White),
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        // 조건에 따른 바텀바 표시
-        if (isAvailable) {
-            Store_AvailableBottomBar() // 상품이 이용 가능할 때
-        } else {
-            Store_NotAvailableBottomBar() // 아직 준비 중일 때
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-    }
-}
 
 @Composable
 fun Menu_BottomBar(){
