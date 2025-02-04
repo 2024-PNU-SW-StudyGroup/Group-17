@@ -40,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.project.namu.R
 import com.project.namu.data.model.StoreData
 import com.project.namu.ui.component.BottomNav
@@ -240,8 +242,14 @@ fun StoreCardWithDetails(storeData: StoreData, navController: NavController) {
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth(1 / 3f) // 카드의 1/3 크기
-                    .background(Color.Gray)
             ) {
+                Image(
+                    painter = rememberAsyncImagePainter(storeData.storePictureUrls),  // ✅ 이미지 URL 로드
+                    contentDescription = "Store Image",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop  // ✅ 크롭하여 꽉 차게 표시
+                )
+
                 Icon(
                     imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                     contentDescription = "Like",
