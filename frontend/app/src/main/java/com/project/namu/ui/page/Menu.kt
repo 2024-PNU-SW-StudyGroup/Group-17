@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -206,7 +207,7 @@ fun Menu_Image() {
                 horizontalArrangement = Arrangement.End
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.map),
+                    imageVector = Icons.Outlined.ShoppingCart,
                     contentDescription = "장바구니",
                     tint = Color.White,
                     modifier = Modifier
@@ -214,15 +215,6 @@ fun Menu_Image() {
                         .size(28.dp)
                 )
 
-                Icon(
-                    imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                    contentDescription = "Like",
-                    tint = Color.White,
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .clickable { isFavorite = !isFavorite }
-                        .size(28.dp)
-                )
             }
         }
     }

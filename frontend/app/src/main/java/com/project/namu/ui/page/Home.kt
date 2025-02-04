@@ -320,7 +320,7 @@ fun CafeCard(){
                 Spacer(modifier = Modifier.width(16.dp))
 
                 Icon(
-                    painter = painterResource(id = R.drawable.map),
+                    painter = painterResource(id = R.drawable.mappin),
                     contentDescription = "Location",
                     tint = Color(0xFF00BCD4),
                     modifier = Modifier.size(16.dp)
