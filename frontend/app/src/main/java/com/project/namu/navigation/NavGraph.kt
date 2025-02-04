@@ -16,6 +16,7 @@ import com.project.namu.model.MyPageViewModel
 import com.project.namu.model.SignInViewModel
 import com.project.namu.mypage.MyPage
 import com.project.namu.ui.page.HomeScreen
+import com.project.namu.ui.page.MenuScreen
 import com.project.namu.ui.page.Search_listScreen
 import com.project.namu.ui.page.StoreScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,5 +48,14 @@ fun NavGraph(navController: NavHostController, startDestination: String = Screen
             val storeId = backStackEntry.arguments?.getInt("storeId") ?: 0
             StoreScreen(navController = navController, storeId = storeId)
         }
+
+        composable(
+            route = "menu_detail/{menuId}",
+            arguments = listOf(navArgument("menuId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val menuId = backStackEntry.arguments?.getInt("menuId") ?: 0
+            MenuScreen(navController = navController, menuId = menuId)
+        }
+
     }
 }

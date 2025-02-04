@@ -1,6 +1,8 @@
 package com.project.namu
 
 import android.content.Context
+import com.project.namu.data.remote.ApiService
+import com.project.namu.data.repository.MenuRepository
 import com.project.namu.model.AuthRepository
 import dagger.Module
 import dagger.Provides
@@ -19,4 +21,11 @@ object AppModule {
     fun provideAuthRepository(@ApplicationContext context: Context): AuthRepository {
         return AuthRepository(context)
     }
+
+    @Provides
+    @Singleton
+    fun provideMenuRepository(apiService: ApiService): MenuRepository {
+        return MenuRepository(apiService)  // ✅ Hilt가 주입할 수 있도록 제공
+    }
+
 }

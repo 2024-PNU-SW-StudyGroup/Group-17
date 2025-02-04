@@ -55,6 +55,7 @@ data class SetInfo(
 )
 
 data class DetailMenu(
+    @SerializedName("menu_id") val menuId: Int,  // ✅ menuId 추가
     @SerializedName("set_name") val setName: String,
     @SerializedName("menu_names") val menuNames: String,
     @SerializedName("menu_price") val menuPrice: Int,

@@ -1,76 +1,82 @@
 package com.project.namu.ui.page
 
+
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.outlined.ShoppingCart
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.project.namu.R
-import com.project.namu.ui.component.Menu_BottomBar
+import coil.compose.rememberAsyncImagePainter
+import com.google.gson.annotations.SerializedName
+import com.project.namu.data.model.MenuDetailData
 import com.project.namu.ui.theme.Main100
 import com.project.namu.ui.theme.Ui_empty
-
+import com.project.namu.ui.viewmodel.MenuDetailUiState
+import com.project.namu.ui.viewmodel.MenuViewModel
 
 @Composable
-fun MenuScreen(navController: NavController) {
-    var selectedIndex by remember { mutableStateOf(0) }
+fun MenuScreen(
+    navController: NavController,
+    menuId: Int,
+    viewModel: MenuViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(menuId) {
+        viewModel.getMenuDetail(menuId) // ✅ menuId를 기반으로 API 요청
+    }
 
     Scaffold(
-        topBar = { },
-
-        bottomBar = {
-            Menu_BottomBar()
-        },
-
-        content = { paddingValues ->
-            Box(modifier = Modifier.padding(paddingValues)) {
-                // 메인 콘텐츠
-                MenuContent()
+        topBar = { /* 상단바 */ },
+        bottomBar = { /* 하단바 */ }
+    ) { paddingValues ->
+        Box(modifier = Modifier.padding(paddingValues)) {
+            when (uiState) {
+                is MenuDetailUiState.Loading -> {
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                }
+                is MenuDetailUiState.Success -> {
+                    val menuDetail = (uiState as MenuDetailUiState.Success).data
+                    MenuContent(menuDetail)
+                }
+                is MenuDetailUiState.Error -> {
+                    val message = (uiState as MenuDetailUiState.Error).message
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(text = "에러: $message", color = Color.Red)
+                    }
+                }
             }
         }
-    )
+    }
 }
 
+
+
 @Composable
-fun MenuContent() {
+fun MenuContent(menuDetail: MenuDetailData) {
     Column(
         modifier = Modifier
             .background(color = Color.White)
             .fillMaxSize()
     ) {
-        Menu_Image()
+        Menu_Image(menuDetail)
 
         Column(modifier = Modifier.padding(20.dp)) {
 
@@ -80,7 +86,7 @@ fun MenuContent() {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "세트A",
+                    text = menuDetail.setName,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
@@ -90,7 +96,7 @@ fun MenuContent() {
 
                 // 메뉴 구성
                 Text(
-                    text = "애플 와플 (1), 콘치폭 핫도그 (1)",
+                    text = menuDetail.menuNames,
                     fontSize = 16.sp,
                     color = Color.Black
                 )
@@ -122,7 +128,7 @@ fun MenuContent() {
 
                 // 할인된 가격
                 Text(
-                    text = "7,070원",
+                    text = "${menuDetail.menuDiscountPrice}원",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Main100 // 녹색 텍스트로 스타일링
@@ -132,7 +138,7 @@ fun MenuContent() {
 
                 // 원래 가격 (취소선)
                 Text(
-                    text = "10,100원",
+                    text = "${menuDetail.menuPrice}원",
                     fontSize = 16.sp,
                     color = Main100,
                     textDecoration = TextDecoration.LineThrough
@@ -152,7 +158,7 @@ fun MenuContent() {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "애플 와플 : 어린시절 즐겨먹던 달콤한 사과쨈에 수제 생크림을 듬뿍 넣은 바삭한 와플",
+                text = menuDetail.menuDetail,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color(0xFF8B8B8B),
@@ -161,7 +167,7 @@ fun MenuContent() {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "콘치폭 핫도그 : 소시지의 육즙이 팡팡 터지는 핫도그에 다양한 토핑이 듬뿍 들어간 핫도그",
+                text = menuDetail.menuDetail,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color(0xFF8B8B8B),
@@ -179,22 +185,22 @@ fun MenuContent() {
 
 
 @Composable
-fun Menu_Image() {
+fun Menu_Image(menuDetail: MenuDetailData) {
     var isFavorite by remember { mutableStateOf(false) } // 좋아요 상태
 
     Box {
-
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(230.dp)
                 .background(color = Ui_empty)
         ) {
-
+            Image(
+                painter = rememberAsyncImagePainter(menuDetail.menuPictureUrl), // ✅ 변경됨
+                contentDescription = "메뉴 사진",
+                modifier = Modifier.fillMaxWidth().height(230.dp)
+        )
         }
-
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -214,22 +220,17 @@ fun Menu_Image() {
                         .padding(8.dp)
                         .size(28.dp)
                 )
-
+                Icon(
+                    imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription = "Like",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clickable { isFavorite = !isFavorite }
+                        .size(28.dp)
+                )
             }
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun MenuPreview() {
-    val navController = rememberNavController()
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White) // 전체 배경색 설정
-    ) {
-        MenuScreen(navController = navController)
-    }
-}
