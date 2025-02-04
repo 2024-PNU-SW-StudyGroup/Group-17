@@ -19,37 +19,45 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import com.project.namu.FavoriteManager
 import com.project.namu.R
+import com.project.namu.data.model.StoreData
+import com.project.namu.data.model.WishItem
 import com.project.namu.ui.component.BottomNav
 import com.project.namu.ui.theme.BackGround
+import com.project.namu.ui.viewmodel.StoreUiState
+import com.project.namu.ui.viewmodel.StoreViewModel
 
 @Composable
 fun WishListScreen(navController: NavController) {
-    var selectedIndex by remember { mutableStateOf(0) }
+    var selectedIndex by remember { mutableStateOf(1) }
     Scaffold(
         topBar = { WishListTopBar() },
-        bottomBar = {BottomNav(
-            navController = navController,
-            selectedIndex = selectedIndex,
-            onItemSelected = { index ->
-                selectedIndex = index
-            }
-        ) }
+        bottomBar = {
+            BottomNav(
+                navController = navController,
+                selectedIndex = selectedIndex,
+                onItemSelected = { index -> selectedIndex = index }
+            )
+        }
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             WishListContent(navController = navController)
         }
     }
 }
+
 
 // ✅ 상단 바
 @Composable
@@ -72,43 +80,70 @@ fun WishListTopBar() {
     }
 }
 
-// ✅ 찜한 목록 내용
 @Composable
-fun WishListContent(navController: NavController) {
-    val sampleStores = List(5) {
-        WishItem(
-            storeName = "카페인중독 부산대점",
-            setMenu = "약과세트A (주인장 추천 초코 약과세트)",
-            time = "19:00 - 21:00",
-            distance = "1.9km",
-            rating = "4.5 (100+)",
-            imageUrl = "" // 여기에 이미지 URL을 넣을 수도 있음
-        )
+fun WishListContent(navController: NavController, storeViewModel: StoreViewModel = hiltViewModel()) {
+    val context = LocalContext.current
+    // 로컬 저장소에 저장된 즐겨찾기 storeId 목록 상태 (문자열로 저장)
+    var favoriteIds by remember { mutableStateOf<List<String>>(emptyList()) }
+
+    // 코루틴 scope로 로컬 저장소에서 즐겨찾기 목록 불러오기
+    LaunchedEffect(key1 = true) {
+        favoriteIds = FavoriteManager.getFavorites(context).toList()
     }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = BackGround)
-            .padding(horizontal = 22.dp, vertical = 8.dp)
-    ) {
-        item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            )  {
-                Text(text = "지금 판매하고 있어요.",  fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+    // 백엔드에서 받아온 가게 데이터 상태
+    val uiState by storeViewModel.uiState
 
-                SortButtonLike()
+    when (uiState) {
+        is StoreUiState.Loading -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
             }
         }
-
-        items(sampleStores) { item ->
-            WishListItem(item = item, navController = navController)
-            Spacer(modifier = Modifier.height(12.dp))
+        is StoreUiState.Success -> {
+            val stores = (uiState as StoreUiState.Success).data
+            // 로컬 저장소에 저장된 storeId와 일치하는 가게만 필터링
+            val favoriteStores = stores.filter { favoriteIds.contains(it.storeId.toString()) }
+                if (favoriteStores.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = "찜한 가게가 없습니다.")
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = BackGround)
+                        .padding(horizontal = 22.dp, vertical = 8.dp)
+                ) {
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        )  {
+                            Text(
+                                text = "지금 판매하고 있어요.",
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black
+                            )
+                            SortButtonLike()
+                        }
+                    }
+                    items(favoriteStores) { store ->
+                        WishListItem(item = store.toWishItem(), navController = navController)
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+                }
+            }
+        }
+        is StoreUiState.Error -> {
+            val message = (uiState as StoreUiState.Error).message
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = message, color = Color.Red)
+            }
         }
     }
 }
@@ -123,7 +158,7 @@ fun WishListItem(item: WishItem, navController: NavController) {
         colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier
             .fillMaxWidth()
-            .height(110.dp)
+            .height(140.dp)
             .clickable { /* 클릭 시 이동 가능 */ }
     ) {
         Row(modifier = Modifier.fillMaxSize()) {
@@ -150,7 +185,7 @@ fun WishListItem(item: WishItem, navController: NavController) {
             ) {
                 Text(
                     text = item.storeName,
-                    fontSize = 18.sp,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
@@ -188,6 +223,12 @@ fun WishListItem(item: WishItem, navController: NavController) {
 
                     Spacer(modifier = Modifier.width(8.dp))
 
+
+
+                }
+
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         painter = painterResource(id = R.drawable.star),
                         contentDescription = "star",
@@ -231,8 +272,8 @@ fun SortButtonLike() {
         Spacer(modifier = Modifier.width(4.dp))
         // 텍스트
         Text(
-            text = "최근 찜한 순",
-            fontSize = 14.sp,
+            text = "최근 순",
+            fontSize = 10.sp,
             fontWeight = FontWeight.Medium,
             color = Color.Black
         )
@@ -251,14 +292,16 @@ fun SortButtonLike() {
 
 
 // ✅ 찜한 아이템 데이터 클래스 (하드코딩용)
-data class WishItem(
-    val storeName: String,
-    val setMenu: String,
-    val time: String,
-    val distance: String,
-    val rating: String,
-    val imageUrl: String
-)
+fun StoreData.toWishItem(): WishItem {
+    return WishItem(
+        storeName = this.storeName,
+        setMenu = this.setNames.joinToString(", ") { it.setName },
+        time = this.pickupTimes,
+        distance = "${this.location / 1000.0} km",
+        rating = "${this.storeRating} (${this.reviewCount}+)",
+        imageUrl = this.storePictureUrls.firstOrNull() ?: ""  // 리스트가 비어있다면 빈 문자열 사용
+    )
+}
 
 // ✅ 미리보기용
 @Preview(showBackground = true)

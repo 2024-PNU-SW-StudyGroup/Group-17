@@ -19,6 +19,7 @@ import com.project.namu.ui.page.HomeScreen
 import com.project.namu.ui.page.MenuScreen
 import com.project.namu.ui.page.Search_listScreen
 import com.project.namu.ui.page.StoreScreen
+import com.project.namu.ui.page.WishListScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @Composable
@@ -39,6 +40,8 @@ fun NavGraph(navController: NavHostController, startDestination: String = Screen
         composable(Screen.MyPage.route) { MyPage(MyPageViewModel = myPageViewModel, logInViewModel= logInViewModel ) }
         composable(Screen.Home.route) { HomeScreen(navController) }
         composable(Screen.Search.route) { Search_listScreen(navController) }
+        composable(Screen.WishList.route) { WishListScreen(navController) }
+
 
         // 가게 상세 화면 (storeId를 Path 파라미터로 받아옴)
         composable(

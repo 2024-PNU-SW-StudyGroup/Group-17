@@ -113,7 +113,7 @@ fun MenuContent(menuDetail: MenuDetailData) {
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .background(color = Main100, shape = RoundedCornerShape(16.dp)) // 녹색 배경과 둥근 모서리
-                        .width(52.dp)
+                        .width(60.dp)
                         .padding(horizontal = 8.dp, vertical = 4.dp) // 텍스트 주위의 패딩
                 ) {
                     Text(

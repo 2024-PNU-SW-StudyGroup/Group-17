@@ -83,7 +83,7 @@ fun BottomNav(
                 selected = selectedIndex == 1,
                 action = {
                     onItemSelected(1)
-                    navController.navigate("예약하기") {
+                    navController.navigate("wish") {
                         popUpTo(navController.graph.startDestinationId)
                         launchSingleTop = true
                     }

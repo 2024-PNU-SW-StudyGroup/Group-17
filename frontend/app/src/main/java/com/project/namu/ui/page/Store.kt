@@ -46,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -134,6 +135,8 @@ fun StoreContent(storeDetailData: StoreDetailData, navController: NavController)
         items(storeDetailData.menus) { menuItem ->
             Store_MenuDetail(menuData = menuItem, navController = navController) // ✅ navController 전달
         }
+        
+        item { Spacer(modifier = Modifier.height(12.dp)) }
     }
 }
 
@@ -201,7 +204,7 @@ fun Store_Detail(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(170.dp)
+            .height(180.dp)
             .background(Color.White)
     ) {
         Column(
@@ -215,7 +218,7 @@ fun Store_Detail(
             ) {
                 Text(
                     text = storeName,
-                    fontSize = 24.sp,
+                    fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
@@ -228,37 +231,37 @@ fun Store_Detail(
                         imageVector = Icons.Default.Star,
                         contentDescription = "Rating",
                         tint = Color(0xFFFFD607),
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(22.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = storeRating.toString(),
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         color = Color.Black,
                         fontWeight = FontWeight.Medium
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            // 가게 전화번호
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = painterResource(id = R.drawable.phone),
-                    contentDescription = "phonenumber",
-                    modifier = Modifier.size(18.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
+             Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.phone),
+                        contentDescription = "phonenumber",
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = storePhone ?: "전화번호 없음",
+                        fontSize = 16.sp,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Normal,
+                    )
+                }
 
-                // null이면 "정보 없음" 식으로 처리할 수도 있음
-                Text(
-                    text = storePhone ?: "전화번호 없음",
-                    fontSize = 16.sp,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Normal,
-                )
-            }
 
             Spacer(modifier = Modifier.height(4.dp))
 
@@ -301,31 +304,6 @@ fun Store_Detail(
         }
 
         // 리뷰 N개 버튼
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(180.dp)
-                .padding(20.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Button(
-                onClick = {  },
-                modifier = Modifier
-                    .border(
-                        width = 1.dp,
-                        color = Color(0xFFE7E7E7),
-                        shape = RoundedCornerShape(30.dp)
-                    )
-                    .width(100.dp)
-                    .height(32.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = Color.Black
-                )
-            ) {
-                Text(text = "리뷰 ${reviewCount}+개")
-            }
-        }
     }
 }
 
@@ -338,12 +316,13 @@ fun Store_MenuDetail(menuData: DetailMenu, navController: NavController) {
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
             .padding(top = 10.dp)
-            .height(165.dp)
+            .height(180.dp)
             .clickable {
                 navController.navigate("menu_detail/${menuData.menuId}") // ✅ menuId로 변경
             }
     ) {
         Row(modifier = Modifier.fillMaxSize()) {
+            // 이미지 영역
             Box(
                 modifier = Modifier
                     .width(120.dp)
@@ -357,32 +336,76 @@ fun Store_MenuDetail(menuData: DetailMenu, navController: NavController) {
                 )
             }
 
+            // 텍스트 정보 영역
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(12.dp)
+                    .padding(vertical = 12.dp)
+                    .padding(start = 12.dp)
+
             ) {
+                // 세트 이름
                 Text(
                     text = menuData.setName,
-                    fontSize = 20.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
                 Spacer(modifier = Modifier.height(4.dp))
+
+                // 메뉴 구성
                 Text(
                     text = menuData.menuNames,
-                    fontSize = 16.sp,
-                    color = Color.Black
+                    fontSize = 12.sp,
+                    color = Color.Black,
+                    lineHeight = 16.sp // 원하는 줄 간격 값으로 조절
+
                 )
                 Spacer(modifier = Modifier.height(4.dp))
+
+                // 메뉴 설명
                 Text(
                     text = menuData.menuDetail,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color(0xFF8B8B8B),
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    lineHeight = 16.sp // 원하는 줄 간격 값으로 조절
+
                 )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // 가격 정보 (할인율, 할인된 가격, 원래 가격)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // 할인율 (초록색)
+                    Text(
+                        text = "30%",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF2DA74D) // 초록색
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    // 할인된 가격 (굵은 글씨)
+                    Text(
+                        text = "${menuData.menuDiscountPrice}원",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    // 원래 가격 (취소선)
+                    Text(
+                        text = "${menuData.menuPrice}원",
+                        fontSize = 12.sp,
+                        color = Color.Gray,
+                        textDecoration = TextDecoration.LineThrough
+                    )
+                }
             }
         }
     }
