@@ -160,8 +160,8 @@ fun FoodCategoryRow() {
             horizontalArrangement = Arrangement.spacedBy(6.dp) // Card 사이 간격 설정
         ) {
             val categories = listOf(
-                "샌드위치" to R.drawable.examplefood, "과일" to R.drawable.examplefood,
-                "편의점,마트" to R.drawable.examplefood, "디저트" to R.drawable.examplefood, "기타" to R.drawable.examplefood
+                "샌드위치" to R.drawable.sandwitch, "과일" to R.drawable.apple,
+                "편의점,마트" to R.drawable.mart, "디저트" to R.drawable.dessert, "기타" to R.drawable.more
             )
 
             categories.forEach { (name, icon) ->
@@ -309,7 +309,7 @@ fun CafeCard(){
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.time),
+                    painter = painterResource(id = R.drawable.clock),
                     contentDescription = "Time",
                     tint = Color(0xFF00BCD4),
                     modifier = Modifier.size(16.dp)

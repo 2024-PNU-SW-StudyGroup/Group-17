@@ -24,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -42,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -52,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.project.namu.R
 import com.project.namu.data.model.DetailMenu
 import com.project.namu.data.model.StoreDetailData
@@ -146,7 +149,7 @@ fun Store_Pager(imageUrls: List<String>) {
     var isFavorite by remember { mutableStateOf(false) }
 
     Box {
-        // 예시: 이미지 슬라이더/페이저
+        // ✅ 이미지 슬라이더/페이저
         PagerWithDotsIndicator(
             indicatorColor = Color.White,
             pageCount = imageUrls.size
@@ -154,17 +157,18 @@ fun Store_Pager(imageUrls: List<String>) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(230.dp)
+                    .height(230.dp) // 높이 설정
             ) {
-                // Coil 예시:
-                // Image(
-                //    painter = rememberAsyncImagePainter(imageUrls[page]),
-                //    contentDescription = "가게 사진"
-                // )
+                Image(
+                    painter = rememberAsyncImagePainter(imageUrls[page]),
+                    contentDescription = "가게 사진",
+                    modifier = Modifier.fillMaxSize(), // ✅ Box 내부를 꽉 채움
+                    contentScale = ContentScale.Crop // ✅ 크롭하여 꽉 차게 표시
+                )
             }
         }
 
-        // 오른쪽 상단 아이콘(장바구니, 좋아요)
+        // 좋아요 & 장바구니 아이콘
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -172,7 +176,7 @@ fun Store_Pager(imageUrls: List<String>) {
             horizontalArrangement = Arrangement.End
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.leaves),
+                imageVector = Icons.Outlined.ShoppingCart,
                 contentDescription = "장바구니",
                 tint = Color.White,
                 modifier = Modifier
@@ -248,7 +252,7 @@ fun Store_Detail(
             // 가게 전화번호
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
-                    painter = painterResource(id = R.drawable.time),
+                    painter = painterResource(id = R.drawable.phone),
                     contentDescription = "phonenumber",
                     modifier = Modifier.size(18.dp)
                 )
@@ -263,10 +267,32 @@ fun Store_Detail(
                 )
             }
 
-// 위치
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // 영업시간
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
-                    painter = painterResource(id = R.drawable.map),
+                    painter = painterResource(id = R.drawable.clock),
+                    contentDescription = "open-time",
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+
+                // null이면 "정보 없음" 식으로 처리할 수도 있음
+                Text(
+                    text = pickupTimes,
+                    fontSize = 16.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Normal,
+                )
+            }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // 위치
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = painterResource(id = R.drawable.mappin),
                     contentDescription = "location",
                     modifier = Modifier.size(18.dp)
                 )
@@ -287,10 +313,10 @@ fun Store_Detail(
                 .fillMaxWidth()
                 .height(180.dp)
                 .padding(20.dp),
-            contentAlignment = Alignment.BottomEnd
+            contentAlignment = Alignment.Center
         ) {
             Button(
-                onClick = { /* TODO: 리뷰 목록으로 이동 */ },
+                onClick = {  },
                 modifier = Modifier
                     .border(
                         width = 1.dp,
@@ -328,12 +354,12 @@ fun Store_MenuDetail(menuData: DetailMenu) {
                     .width(120.dp)
                     .fillMaxHeight()
             ) {
-                // 예) Coil
-                // Image(
-                //   painter = rememberAsyncImagePainter(menuData.menuPictureUrl),
-                //   contentDescription = null,
-                //   modifier = Modifier.fillMaxSize()
-                // )
+                 Image(
+                   painter = rememberAsyncImagePainter(menuData.menuPictureUrl),
+                   contentDescription = null,
+                   modifier = Modifier.fillMaxSize(), // ✅ Box 내부를 꽉 채움
+                   contentScale = ContentScale.Crop // ✅ 크롭하여 꽉 차게 표시
+                 )
             }
 
             // 오른쪽 텍스트
@@ -378,7 +404,7 @@ fun Store_MenuDetail(menuData: DetailMenu) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = "${discountPercent}%",
-                        fontSize = 16.sp,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF4CAF50)
                     )
@@ -386,7 +412,7 @@ fun Store_MenuDetail(menuData: DetailMenu) {
 
                     Text(
                         text = "${menuData.menuDiscountPrice}원",
-                        fontSize = 16.sp,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
                     )
@@ -394,7 +420,7 @@ fun Store_MenuDetail(menuData: DetailMenu) {
 
                     Text(
                         text = "${menuData.menuPrice}원",
-                        fontSize = 14.sp,
+                        fontSize = 16.sp,
                         color = Color(0xFF8B8B8B),
                         textDecoration = TextDecoration.LineThrough
                     )

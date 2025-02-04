@@ -145,13 +145,13 @@ fun FilterButtonRow() {
     ) {
         SortButton()
         Spacer(modifier = Modifier.width(4.dp))
-        FilterButton(image = R.drawable.star, text = "별점")
+        FilterButton(image = R.drawable.blackstar, text = "별점")
         Spacer(modifier = Modifier.width(4.dp))
-        FilterButton(image = R.drawable.message, text = "가격대")
+        FilterButton(image = R.drawable.dallor, text = "가격대")
         Spacer(modifier = Modifier.width(4.dp))
-        FilterButton(image = R.drawable.time, text = "픽업시간대")
+        FilterButton(image = R.drawable.blackclock, text = "픽업시간대")
         Spacer(modifier = Modifier.width(4.dp))
-        FilterButton(image = R.drawable.location, text = "거리")
+        FilterButton(image = R.drawable.blackmap, text = "거리")
 
     }
 }
@@ -166,7 +166,7 @@ fun SortButton() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = painterResource(id = R.drawable.usermanage ),
+            painter = painterResource(id = R.drawable.arrow),
             contentDescription = "기본순",
             modifier = Modifier.size(14.dp)
         )
@@ -186,7 +186,7 @@ fun SortButton() {
             imageVector = Icons.Default.ArrowDropDown,
             contentDescription = "Dropdown",
             tint = Color.Black,
-            modifier = Modifier.size(14.dp)
+            modifier = Modifier.size(16.dp)
         )
     }
 }
