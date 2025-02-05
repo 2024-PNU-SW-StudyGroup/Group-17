@@ -9,11 +9,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -23,11 +22,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -35,44 +31,68 @@ import coil.compose.rememberAsyncImagePainter
 import com.project.namu.CartManager
 import com.project.namu.R
 import com.project.namu.data.model.CartItemModel
+import com.project.namu.ui.component.Pay_BottomBar
 import com.project.namu.ui.theme.BackGround
 import com.project.namu.ui.theme.Main100
 
 @Composable
 fun PaymentScreen(navController: NavController) {
     val cartItems = CartManager.cartItems  // mutableStateListOf이므로 상태 변경 시 재구성됨
+    val totalPrice = CartManager.getTotalPrice()  // 예: 총 주문 금액을 가져옴
+
 
     Surface(color = BackGround, modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp, vertical = 8.dp) // 전체 contentPadding 통일
+        LazyColumn(  // 전체 화면을 스크롤 가능하게 변경
+            modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            TopBar()
-            Spacer(modifier = Modifier.height(16.dp))
+            item {
+                TopBar()
+            }
 
-            // 장바구니 아이템들을 LazyColumn으로 표시
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(cartItems) { item ->
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            item {
+                cartItems.forEach { item ->
                     CartItem(cartItem = item)
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
 
-            RequestSection()
-            Spacer(modifier = Modifier.height(16.dp))
-            PaymentMethods()
-            Spacer(modifier = Modifier.height(16.dp))
-            CouponSection()
-            Spacer(modifier = Modifier.height(16.dp))
-            PaymentSummary(navController)
-        }
+            item {
+                RequestSection()
+            }
+
+            item {
+                PaymentMethods()
+            }
+
+            item {
+                CouponSection()
+            }
+
+            item { PaymentSummary(navController = navController, totalPrice = totalPrice) }
+
+
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = (-16).dp) // 부모의 horizontal padding 16dp를 상쇄
+                ) {
+                    Pay_BottomBar(navController)
+                }
+            }        }
     }
 }
-    @Composable
-    fun CartItem(cartItem: CartItemModel) {
+
+@Composable
+fun CartItem(cartItem: CartItemModel) {
     Card(
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier.fillMaxWidth(),
@@ -86,8 +106,7 @@ fun PaymentScreen(navController: NavController) {
                 modifier = Modifier
                     .size(120.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Color.LightGray)
-                    .fillMaxSize(),
+                    .background(Color.LightGray),
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.width(16.dp))
@@ -110,7 +129,7 @@ fun PaymentScreen(navController: NavController) {
                         text = description,
                         fontSize = 12.sp,
                         color = Color.Gray,
-                        lineHeight = 16.sp // 원하는 줄 간격 값으로 조절
+                        lineHeight = 16.sp
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
@@ -148,36 +167,35 @@ fun PaymentScreen(navController: NavController) {
                     modifier = Modifier
                         .align(Alignment.End)
                         .clip(RoundedCornerShape(12.dp))
-                        .border(1.dp, Color.LightGray, RoundedCornerShape(10.dp)) // 테두리 추가
+                        .border(1.dp, Color.LightGray, RoundedCornerShape(10.dp))
                         .padding(horizontal = 4.dp, vertical = 8.dp)
                 ) {
-                    // 감소 버튼
+                    // 감소 버튼: decreaseQuantity() 호출
                     Icon(
                         painter = painterResource(id = R.drawable.minus),
                         contentDescription = "Decrease",
                         modifier = Modifier
                             .size(14.dp)
                             .clickable {
-                                if (cartItem.quantity > 1) {
-                                    cartItem.quantity--
-                                }
+                                cartItem.decreaseQuantity()
                             }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
+                    // **중요**: 표시할 때는 quantityState를 사용해야 함
                     Text(
-                        text = "${cartItem.quantity}",
+                        text = "${cartItem.quantityState}",
                         modifier = Modifier.padding(horizontal = 4.dp),
                         fontSize = 12.sp
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    // 증가 버튼
+                    // 증가 버튼: increaseQuantity() 호출
                     Icon(
                         painter = painterResource(id = R.drawable.plus),
                         contentDescription = "Increase",
                         modifier = Modifier
                             .size(14.dp)
                             .clickable {
-                                cartItem.quantity++
+                                cartItem.increaseQuantity()
                             }
                     )
                 }
@@ -207,64 +225,165 @@ fun TopBar() {
 
 
 
-
 @Composable
 fun RequestSection() {
-    Card(shape = RoundedCornerShape(8.dp), modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),   colors = CardDefaults.cardColors(containerColor = Color.White)) {
+    Card(
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
+    ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text("요청사항", fontWeight = FontWeight.Bold, fontSize = 16.sp)
-            Text(text = AnnotatedString("견과류 알레르기가 있어요."))
+            Text("견과류 알레르기가 있어요.")
+        }
+    }
+}
+@Composable
+fun PaymentMethods() {
+    var selectedMethod by remember { mutableStateOf("신용/체크카드") }
+
+    Card(
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text("결제 수단", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+
+            PaymentOptionRow("신용/체크카드", selectedMethod) { selectedMethod = it }
+            PaymentOptionRow("카카오페이", selectedMethod, R.drawable.kakao) { selectedMethod = it }
+            PaymentOptionRow("현장결제", selectedMethod) { selectedMethod = it }
         }
     }
 }
 
 @Composable
-fun PaymentMethods() {
-    Column {
-        Text("결제 수단", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+fun PaymentOptionRow(
+    method: String,
+    selectedMethod: String,
+    iconRes: Int? = null, // 아이콘이 있을 경우만 표시
+    onSelected: (String) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onSelected(method) }, // Row 클릭 시 선택 변경
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            RadioButton(selected = false, onClick = {})
-            Text("신용/체크카드")
+            iconRes?.let {
+                Image(
+                    painter = painterResource(id = it),
+                    contentDescription = method,
+                    modifier = Modifier.size(24.dp) // 아이콘 크기 조정
+                )
+                Spacer(modifier = Modifier.width(8.dp)) // 아이콘과 텍스트 간격
+            }
+            Text(method)
         }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            RadioButton(selected = false, onClick = {})
-            Text("카카오페이")
-        }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            RadioButton(selected = false, onClick = {})
-            Text("현장결제")
-        }
+        RadioButton(
+            selected = selectedMethod == method,
+            onClick = { onSelected(method) } // 클릭하면 선택 변경
+        )
     }
 }
+
 
 @Composable
 fun CouponSection() {
-    Card(shape = RoundedCornerShape(8.dp), modifier = Modifier.fillMaxWidth()) {
-        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+    Card(
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            // "할인 쿠폰" 제목
             Text("할인 쿠폰", fontWeight = FontWeight.Bold, fontSize = 16.sp)
-            Spacer(modifier = Modifier.weight(1f))
-            Text("쿠폰 1", fontSize = 14.sp, color = Color.Blue)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text("1,000원 할인", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // 쿠폰 선택 박스
+            Card(
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("쿠폰 1", fontSize = 14.sp, color = Color.Black)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("1,000원 할인", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Main100)
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowRight,
+                            contentDescription = "Go to Coupons",
+                            tint = Color.Gray
+                        )
+                    }
+                }
+            }
         }
     }
 }
 
+
 @Composable
-fun PaymentSummary(navController: NavController) {
-    Column {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("주문 금액", fontSize = 16.sp)
-            Text("14,140원", fontWeight = FontWeight.Bold)
+fun PaymentSummary(navController: NavController, totalPrice: Int) {
+    // 할인 금액을 상수로 지정 (예: 1000원)
+    val discount = 1000
+    val finalPrice = totalPrice - discount
+
+    Card(
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            // 주문 금액
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("주문 금액", fontSize = 16.sp)
+                Text("${totalPrice}원", fontWeight = FontWeight.Bold)
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // 쿠폰 할인 금액
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("쿠폰", fontSize = 16.sp)
+                Text("-${discount}원", fontWeight = FontWeight.Bold, color = Main100)
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+            Divider(color = Color.LightGray, thickness = 1.dp)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // 최종 결제 금액 (할인 적용)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("최종 결제 금액", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text("${finalPrice}원", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+            }
         }
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("쿠폰", fontSize = 16.sp)
-            Text("-1,000원", fontWeight = FontWeight.Bold, color = Color.Red)
-        }
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("최종 결제 금액", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            Text("13,140원", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.Green)
-        }
-        Spacer(modifier = Modifier.height(16.dp))
     }
 }

@@ -28,6 +28,6 @@ object CartManager {
     }
 
     fun getTotalPrice(): Int {
-        return _cartItems.sumOf { it.price * it.quantity }
+        return _cartItems.sumOf { (it.discountPrice ?: it.price) * it.quantity }
     }
 }

@@ -248,7 +248,34 @@ fun Menu_BottomBar(navController: NavController, menuDetail: MenuDetailData) {
     }
 }
 
-
+@Composable
+fun Pay_BottomBar(navController: NavController) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = Color.White),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)
+                .padding(16.dp)
+                .background(
+                    color = Color(0xFF4CAF50),
+                    shape = RoundedCornerShape(16.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "결제하기",
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
