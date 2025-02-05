@@ -38,56 +38,62 @@ import com.project.namu.ui.theme.Main100
 @Composable
 fun PaymentScreen(navController: NavController) {
     val cartItems = CartManager.cartItems  // mutableStateListOf이므로 상태 변경 시 재구성됨
-    val totalPrice = CartManager.getTotalPrice()  // 예: 총 주문 금액을 가져옴
-
+    val totalPrice = CartManager.getTotalPrice()  // 총 주문 금액
 
     Surface(color = BackGround, modifier = Modifier.fillMaxSize()) {
-        LazyColumn(  // 전체 화면을 스크롤 가능하게 변경
-            modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 8.dp),
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(vertical = 8.dp), // vertical padding만 적용
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
-                TopBar()
+                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    TopBar()
+                }
             }
-
             item {
                 Spacer(modifier = Modifier.height(16.dp))
             }
-
             item {
-                cartItems.forEach { item ->
-                    CartItem(cartItem = item)
+                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    // 각 항목을 forEach로 나열할 때에도 개별적으로 감싸줍니다.
+                    Column {
+                        cartItems.forEach { item ->
+                            CartItem(cartItem = item)
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
+                    }
                 }
             }
-
             item {
-                RequestSection()
+                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    RequestSection()
+                }
             }
-
             item {
-                PaymentMethods()
+                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    PaymentMethods()
+                }
             }
-
             item {
-                CouponSection()
+                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    CouponSection()
+                }
             }
-
-            item { PaymentSummary(navController = navController, totalPrice = totalPrice) }
-
-
+            item {
+                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    PaymentSummary(navController = navController, totalPrice = totalPrice)
+                }
+            }
             item {
                 Spacer(modifier = Modifier.height(16.dp))
             }
-
+            // 마지막 Pay_BottomBar에는 horizontal padding을 적용하지 않음 → 화면 전체 너비 사용
             item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = (-16).dp) // 부모의 horizontal padding 16dp를 상쇄
-                ) {
-                    Pay_BottomBar(navController)
-                }
-            }        }
+                Pay_BottomBar(navController)
+            }
+        }
     }
 }
 

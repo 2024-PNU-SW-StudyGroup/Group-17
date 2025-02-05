@@ -18,6 +18,8 @@ import com.project.namu.model.SignInViewModel
 import com.project.namu.mypage.MyPage
 import com.project.namu.ui.page.HomeScreen
 import com.project.namu.ui.page.MenuScreen
+import com.project.namu.ui.page.OrderDetailsScreen
+import com.project.namu.ui.page.PayComplete
 import com.project.namu.ui.page.Search_listScreen
 import com.project.namu.ui.page.StoreScreen
 import com.project.namu.ui.page.WishListScreen
@@ -43,6 +45,8 @@ fun NavGraph(navController: NavHostController, startDestination: String = Screen
         composable(Screen.Search.route) { Search_listScreen(navController) }
         composable(Screen.WishList.route) { WishListScreen(navController) }
         composable("cart") { PaymentScreen(navController = navController) }
+        composable("paycomplete") { PayComplete(navController = navController) }
+        composable("orderdetail") { OrderDetailsScreen(navController = navController) }
 
 
 

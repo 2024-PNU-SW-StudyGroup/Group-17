@@ -264,11 +264,48 @@ fun Pay_BottomBar(navController: NavController) {
                 .background(
                     color = Color(0xFF4CAF50),
                     shape = RoundedCornerShape(16.dp)
-                ),
+                )
+                .clickable {
+                    navController.navigate("paycomplete")
+                },
+
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "결제하기",
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+}
+
+@Composable
+fun check_BottomBar(navController: NavController) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = Color.White),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)
+                .padding(16.dp)
+                .background(
+                    color = Color(0xFF4CAF50),
+                    shape = RoundedCornerShape(16.dp)
+                )
+                .clickable {
+                    navController.navigate("홈")
+                },
+
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "확인",
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
