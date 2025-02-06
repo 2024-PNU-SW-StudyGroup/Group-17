@@ -61,7 +61,7 @@ class LogInViewModel @Inject constructor(
 
                     // ✅ 성공 로그 및 이동
                     Log.d("LogInViewModel", "서버 응답 성공: $response")
-                    navController.navigate(Screen.Search.route)
+                    navController.navigate(Screen.Home.route)
 
 
             } catch (e: HttpException) { // 4xx, 5xx 오류 처리
