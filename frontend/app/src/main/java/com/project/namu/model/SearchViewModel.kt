@@ -46,11 +46,13 @@ class SearchViewModel @Inject constructor(
 
 
                 val response = apiService.searchStores(_query.value)
+
                 _searchResults.value = response.data
 
                 if(response.isSuccess == false){
                     _isSearching.value = false
                 }else{
+                    Log.d("StoreSearch", "${_searchResults.value}")
                     navController.navigate(Screen.Search.route)
 
                 }

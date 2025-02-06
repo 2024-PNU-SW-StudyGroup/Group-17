@@ -278,7 +278,7 @@ fun StoreCardWithDetails(storeData: StoreData, navController: NavController) {
                     .fillMaxWidth(1 / 3f) // 카드의 1/3 크기
             ) {
                 Image(
-                    painter = rememberAsyncImagePainter(storeData.storePictureUrls.firstOrNull() ?: ""),  // ✅ 이미지 URL 로드
+                    painter = rememberAsyncImagePainter(storeData.storePictureUrls),  // ✅ 이미지 URL 로드
                     contentDescription = "Store Image",
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop  // ✅ 크롭하여 꽉 차게 표시

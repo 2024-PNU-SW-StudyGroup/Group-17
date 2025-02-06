@@ -124,7 +124,10 @@ fun MenuContent(menuDetail: MenuDetailData) {
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
-                        .background(color = Main100, shape = RoundedCornerShape(16.dp)) // 녹색 배경과 둥근 모서리
+                        .background(
+                            color = Main100,
+                            shape = RoundedCornerShape(16.dp)
+                        ) // 녹색 배경과 둥근 모서리
                         .width(60.dp)
                         .padding(horizontal = 8.dp, vertical = 4.dp) // 텍스트 주위의 패딩
                 ) {
@@ -210,7 +213,9 @@ fun Menu_Image(menuDetail: MenuDetailData) {
             Image(
                 painter = rememberAsyncImagePainter(menuDetail.menuPictureUrl), // ✅ 변경됨
                 contentDescription = "메뉴 사진",
-                modifier = Modifier.fillMaxWidth().height(230.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(230.dp)
         )
         }
         Box(

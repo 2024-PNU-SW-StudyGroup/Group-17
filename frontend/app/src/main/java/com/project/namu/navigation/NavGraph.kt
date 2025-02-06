@@ -24,6 +24,7 @@ import com.project.namu.ui.page.PayComplete
 import com.project.namu.ui.page.Search_listScreen
 import com.project.namu.ui.page.StoreScreen
 import com.project.namu.ui.page.WishListScreen
+import com.project.namu.ui.viewmodel.MenuViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @Composable

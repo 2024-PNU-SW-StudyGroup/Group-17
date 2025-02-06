@@ -4,6 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.namu.data.model.MenuDetailData
 import com.project.namu.data.repository.MenuRepository
+import com.project.namu.model.AuthInterceptor
+import com.project.namu.model.AuthRepository
+import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,8 +21,9 @@ sealed class MenuDetailUiState {
 
 // ✅ HiltViewModel 추가
 @HiltViewModel  // ✅ Hilt ViewModel 어노테이션 추가
-class MenuViewModel @Inject constructor(  // ✅ Hilt가 MenuRepository를 주입할 수 있도록 @Inject 추가
-    private val repository: MenuRepository
+class MenuViewModel @Inject constructor(
+    private val repository: MenuRepository,
+
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<MenuDetailUiState>(MenuDetailUiState.Loading)
