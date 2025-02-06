@@ -46,7 +46,7 @@ data class StoreDetailData(
     // 실제 메뉴 정보 - DetailMenu
     @SerializedName("menus") val menus: List<DetailMenu> = emptyList(),
 
-    @SerializedName("open") val open: Boolean
+    @SerializedName("open") val open: Boolean = false
 )
 
 data class SetInfo(

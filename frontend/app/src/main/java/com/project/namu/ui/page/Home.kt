@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.project.namu.R
+import com.project.namu.model.SearchViewModel
 import com.project.namu.ui.component.BottomNav
 import com.project.namu.ui.component.SearchTopBar
 import com.project.namu.ui.tools.PagerWithDotsIndicator
@@ -56,17 +57,18 @@ import com.project.namu.ui.theme.Main100
 import com.project.namu.ui.theme.Main200
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, searchViewModel: SearchViewModel) {
     var selectedIndex by remember { mutableStateOf(0) }
 
     Scaffold(
         topBar = {
             SearchTopBar(
-                onSearch = {},
+                searchViewModel = searchViewModel,
                 additionalContent = {
                     Spacer(modifier = Modifier.height(20.dp)) // 원하는 높이로 Spacer 추가
                 },
-                notificationVisible = true // 여기서 알림 아이콘 표시 여부를 결정
+                notificationVisible = true, // 여기서 알림 아이콘 표시 여부를 결정
+                navController = navController
             )
         },
 
@@ -335,6 +337,7 @@ fun CafeCard(){
     }
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun HomePreview() {
@@ -348,3 +351,5 @@ fun HomePreview() {
         HomeScreen(navController = navController)
     }
 }
+
+ */

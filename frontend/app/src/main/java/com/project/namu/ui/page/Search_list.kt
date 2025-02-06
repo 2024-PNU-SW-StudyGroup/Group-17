@@ -1,5 +1,6 @@
 package com.project.namu.ui.page
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +52,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.project.namu.R
 import com.project.namu.data.model.StoreData
+import com.project.namu.model.AuthInterceptor
+import com.project.namu.model.AuthRepository
+import com.project.namu.model.SearchViewModel
 import com.project.namu.ui.component.BottomNav
 import com.project.namu.ui.component.SearchTopBar
 import com.project.namu.ui.theme.BackGround
@@ -57,19 +62,19 @@ import com.project.namu.ui.viewmodel.StoreUiState
 import com.project.namu.ui.viewmodel.StoreViewModel
 
 @Composable
-fun Search_listScreen(navController: NavController) {
+fun Search_listScreen(
+    navController: NavController,
+    searchViewModel: SearchViewModel
+) {
     var selectedIndex by remember { mutableStateOf(0) }
+
 
     // ✅ StoreViewModel을 Hilt를 이용해 가져오기
     val storeViewModel: StoreViewModel = hiltViewModel()
 
     Scaffold(
         topBar = {
-            SearchTopBar(
-                onSearch = { /* 검색 처리 로직 */ },
-                additionalContent = { FilterButtonRow() },
-                notificationVisible = false // 알림 아이콘 표시 여부
-            )
+            SearchTopBar(searchViewModel, navController = navController)
         },
 
         bottomBar = {
@@ -85,7 +90,7 @@ fun Search_listScreen(navController: NavController) {
         content = { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {
                 // ✅ StoreViewModel을 Search_listContent에 전달
-                Search_listContent(navController = navController, viewModel = storeViewModel)
+                Search_listContent(navController = navController, viewModel = storeViewModel, searchViewModel = searchViewModel)
             }
         }
     )
@@ -94,37 +99,65 @@ fun Search_listScreen(navController: NavController) {
 @Composable
 fun Search_listContent(
     navController: NavController, // ← NavController를 인자로 받아서
-    viewModel: StoreViewModel // ✅ ViewModel을 매개변수로 받음
+    viewModel: StoreViewModel, // ✅ ViewModel을 매개변수로 받음
+    searchViewModel: SearchViewModel
 ) {
     val uiState by viewModel.uiState
+    val isSearching by searchViewModel.isSearching.collectAsState()
+    val searchResults by searchViewModel.searchResults.collectAsState()
 
-    when (uiState) {
-        is StoreUiState.Loading -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+
+    Log.d("DEBUG", "검색 결과 리스트: ${searchResults.size}")
+
+    if (isSearching){
+        val stores = searchResults
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = BackGround)
+                .padding(horizontal = 20.dp)
+                .padding(vertical = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(stores.size) { index ->
+                StoreCardWithDetails(storeData = stores[index], navController = navController)
             }
         }
+    }
 
-        is StoreUiState.Success -> {
-            val stores = (uiState as StoreUiState.Success).data
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = BackGround)
-                    .padding(horizontal = 20.dp)
-                    .padding(vertical = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(stores.size) { index ->
-                    StoreCardWithDetails(storeData = stores[index], navController = navController)
+    else {
+
+        when (uiState) {
+            is StoreUiState.Loading -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
                 }
             }
-        }
 
-        is StoreUiState.Error -> {
-            val message = (uiState as StoreUiState.Error).message
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = message, color = Color.Red)
+            is StoreUiState.Success -> {
+                val stores = (uiState as StoreUiState.Success).data
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = BackGround)
+                        .padding(horizontal = 20.dp)
+                        .padding(vertical = 20.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(stores.size) { index ->
+                        StoreCardWithDetails(
+                            storeData = stores[index],
+                            navController = navController
+                        )
+                    }
+                }
+            }
+
+            is StoreUiState.Error -> {
+                val message = (uiState as StoreUiState.Error).message
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = message, color = Color.Red)
+                }
             }
         }
     }
@@ -334,17 +367,20 @@ fun StoreCardWithDetails(storeData: StoreData, navController: NavController) {
     }
 }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun Search_listPreview() {
     val navController = rememberNavController()
+
+    val searchViewModel = SearchViewModel(authRepository = AuthRepository(), authInterceptor = AuthInterceptor())
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White) // 전체 배경색 설정
     ) {
-        Search_listScreen(navController = navController)
+        Search_listScreen(navController = navController, searchViewModel = )
     }
 }
+*/

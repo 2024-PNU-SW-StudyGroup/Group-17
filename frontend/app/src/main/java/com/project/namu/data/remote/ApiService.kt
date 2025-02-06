@@ -10,6 +10,7 @@ import com.project.namu.model.EmailSignInRequest
 import com.project.namu.model.EmailSignInResponse
 import com.project.namu.model.MyPageResponse
 import com.project.namu.model.RefreshResponse
+import com.project.namu.model.SearchResponse
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -19,6 +20,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 
 object ApiClient {
@@ -71,6 +73,9 @@ interface ApiService{
     @GET("store/list")
     // 최상위가 배열이므로, Response<List<StoreData>>로 선언
     suspend fun getStoreList(): Response<List<StoreData>>
+
+    @GET("search") // 검색 API 엔드포인트
+    suspend fun searchStores(@Query("term") term: String): SearchResponse
 
     @GET("store/{storeId}")
     suspend fun getStoreDetail(@Path("storeId") storeId: Int): Response<StoreDetailData>
