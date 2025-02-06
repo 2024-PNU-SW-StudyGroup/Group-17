@@ -7,6 +7,6 @@ sealed class Screen(val route: String) {
     object MyPage : Screen("mypage")
     object Home : Screen("홈")
     object Search : Screen("검색")
-
     object PayComplete : Screen("결제 완료")
+    object WishList : Screen("wish")
 }

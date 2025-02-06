@@ -1,5 +1,6 @@
 package com.project.namu.data.remote
 
+import com.project.namu.data.model.MenuDetailResponse
 import com.project.namu.data.model.StoreData
 import com.project.namu.data.model.StoreDetailData
 import com.project.namu.model.AuthInterceptor
@@ -79,5 +80,7 @@ interface ApiService{
 
     @GET("store/{storeId}")
     suspend fun getStoreDetail(@Path("storeId") storeId: Int): Response<StoreDetailData>
+    @GET("menu/{menuId}")  // ✅ API 경로가 백엔드와 일치하는지 확인
+    suspend fun getMenuDetail(@Path("menuId") menuId: Int): MenuDetailResponse
 
 }

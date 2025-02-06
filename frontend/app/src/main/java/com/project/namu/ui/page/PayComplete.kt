@@ -96,7 +96,9 @@ fun PayComplete(navController: NavController){
             horizontalArrangement = Arrangement.Center
         ){
             Button(
-                onClick = {},
+                onClick = {
+                    navController.navigate("orderdetail")
+                },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent
                 ),
@@ -112,8 +114,8 @@ fun PayComplete(navController: NavController){
                 Text(
                     text = "주문내역 확인하기",
                     style = TextStyle(
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight(400),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight(600),
                         color = Color(0xFFFFFFFF),
                     )
                 )
@@ -123,7 +125,7 @@ fun PayComplete(navController: NavController){
 
             Button(
                 onClick = {
-                          navController.navigate(Screen.Home.route)
+                    navController.navigate(Screen.Home.route)
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent
@@ -140,8 +142,9 @@ fun PayComplete(navController: NavController){
                 Text(
                     text = "홈으로 가기",
                     style = TextStyle(
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight(400),
+
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight(600),
                         color = Color(0xFFFFFFFF),
                     )
                 )

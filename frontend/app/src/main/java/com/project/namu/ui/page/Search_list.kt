@@ -42,6 +42,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,6 +52,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
+import com.project.namu.FavoriteManager
 import com.project.namu.R
 import com.project.namu.data.model.StoreData
 import com.project.namu.model.AuthInterceptor
@@ -178,13 +182,13 @@ fun FilterButtonRow() {
     ) {
         SortButton()
         Spacer(modifier = Modifier.width(4.dp))
-        FilterButton(image = R.drawable.star, text = "별점")
+        FilterButton(image = R.drawable.blackstar, text = "별점")
         Spacer(modifier = Modifier.width(4.dp))
-        FilterButton(image = R.drawable.message, text = "가격대")
+        FilterButton(image = R.drawable.dallor, text = "가격대")
         Spacer(modifier = Modifier.width(4.dp))
-        FilterButton(image = R.drawable.time, text = "픽업시간대")
+        FilterButton(image = R.drawable.blackclock, text = "픽업시간대")
         Spacer(modifier = Modifier.width(4.dp))
-        FilterButton(image = R.drawable.location, text = "거리")
+        FilterButton(image = R.drawable.blackmap, text = "거리")
 
     }
 }
@@ -199,7 +203,7 @@ fun SortButton() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = painterResource(id = R.drawable.usermanage ),
+            painter = painterResource(id = R.drawable.arrow),
             contentDescription = "기본순",
             modifier = Modifier.size(14.dp)
         )
@@ -219,7 +223,7 @@ fun SortButton() {
             imageVector = Icons.Default.ArrowDropDown,
             contentDescription = "Dropdown",
             tint = Color.Black,
-            modifier = Modifier.size(14.dp)
+            modifier = Modifier.size(16.dp)
         )
     }
 }
@@ -249,9 +253,10 @@ fun FilterButton(image: Int, text: String) {
 
 @Composable
 fun StoreCardWithDetails(storeData: StoreData, navController: NavController) {
-    var isFavorite by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    // 초기 상태를 로컬 저장소에서 불러옴 (storeId 타입에 맞게 toString() 처리)
+    var isFavorite by remember { mutableStateOf(FavoriteManager.isFavorite(context, storeData.storeId.toString())) }
 
-    Log.d("DEBUG", "setNames: ${storeData.setNames}")
 
     Card(
         shape = RoundedCornerShape(16.dp),
@@ -260,8 +265,6 @@ fun StoreCardWithDetails(storeData: StoreData, navController: NavController) {
             .fillMaxWidth()
             .height(180.dp)
             .clickable {
-                Log.d("DEBUG", "Clicked storeId = ${storeData.storeId}")
-
                 navController.navigate("가게상세/${storeData.storeId}")
             }
     ) {
@@ -273,8 +276,14 @@ fun StoreCardWithDetails(storeData: StoreData, navController: NavController) {
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth(1 / 3f) // 카드의 1/3 크기
-                    .background(Color.Gray)
             ) {
+                Image(
+                    painter = rememberAsyncImagePainter(storeData.storePictureUrls.firstOrNull() ?: ""),  // ✅ 이미지 URL 로드
+                    contentDescription = "Store Image",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop  // ✅ 크롭하여 꽉 차게 표시
+                )
+
                 Icon(
                     imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                     contentDescription = "Like",
@@ -282,7 +291,10 @@ fun StoreCardWithDetails(storeData: StoreData, navController: NavController) {
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(8.dp)
-                        .clickable { isFavorite = !isFavorite }
+                        .clickable {
+                            isFavorite = !isFavorite
+                            FavoriteManager.toggleFavorite(context, storeData.storeId.toString())
+                        }
                 )
             }
 
@@ -295,7 +307,7 @@ fun StoreCardWithDetails(storeData: StoreData, navController: NavController) {
                 // 가게 이름
                 Text(
                     text = storeData.storeName,
-                    fontSize = 20.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
@@ -307,8 +319,10 @@ fun StoreCardWithDetails(storeData: StoreData, navController: NavController) {
                 // 세트 메뉴 정보
                 Text(
                     text = storeData.setNames.joinToString("\n") { "${it.setName} (${it.menuNames})" },
-                    fontSize = 14.sp,
-                    color = Color.Gray
+                    fontSize = 10.sp,
+                    color = Color.Gray,
+                    lineHeight = 16.sp // 원하는 줄 간격 값으로 조절
+
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -316,7 +330,7 @@ fun StoreCardWithDetails(storeData: StoreData, navController: NavController) {
                 // 최소 가격
                 Text(
                     text = "₩ ${storeData.minPrice} ~",
-                    fontSize = 14.sp,
+                    fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
@@ -333,7 +347,9 @@ fun StoreCardWithDetails(storeData: StoreData, navController: NavController) {
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(text = "${storeData.storeRating} (${storeData.reviewCount}+)")
+                        Text(text = "${storeData.storeRating} (${storeData.reviewCount}+)",
+                            fontSize = 10.sp,
+                        )
 
                         Spacer(modifier = Modifier.width(8.dp))
                     }
@@ -342,24 +358,28 @@ fun StoreCardWithDetails(storeData: StoreData, navController: NavController) {
 
                     Row( verticalAlignment = Alignment.CenterVertically ) {
                         Icon(
-                            painter = painterResource(id = R.drawable.time),
+                            painter = painterResource(id = R.drawable.clock),
                             contentDescription = "Time",
                             tint = Color(0xFF00BCD4),
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(text = storeData.pickupTimes)
+                        Text(text = storeData.pickupTimes,
+                            fontSize = 10.sp,
+                        )
 
                         Spacer(modifier = Modifier.width(8.dp))
 
                         Icon(
-                            painter = painterResource(id = R.drawable.map),
+                            painter = painterResource(id = R.drawable.mappin),
                             contentDescription = "Location",
                             tint = Color(0xFF00BCD4),
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(text = "${storeData.location / 1000.0} km")
+                        Text(text = "${storeData.location / 1000.0} km",
+                            fontSize = 10.sp,
+                        )
                     }
                 }
             }

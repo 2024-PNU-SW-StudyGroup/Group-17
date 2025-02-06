@@ -14,7 +14,10 @@ data class StoreData(
     @SerializedName("location") val location: Int,
 
     @SerializedName("open") val open: Boolean,
-    @SerializedName("setNames") val setNames: List<SetInfo>
+    @SerializedName("setNames") val setNames: List<SetInfo>,
+
+    @SerializedName("storePictureUrls") val storePictureUrls: List<String>  // ✅ 추가된 필드 (가게 이미지 URL 리스트)
+
 )
 
 data class StoreDetailData(
@@ -55,6 +58,7 @@ data class SetInfo(
 )
 
 data class DetailMenu(
+    @SerializedName("menu_id") val menuId: Int,  // ✅ menuId 추가
     @SerializedName("set_name") val setName: String,
     @SerializedName("menu_names") val menuNames: String,
     @SerializedName("menu_price") val menuPrice: Int,

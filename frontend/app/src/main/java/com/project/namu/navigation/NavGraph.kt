@@ -1,6 +1,7 @@
 package com.project.namu.navigation
 
 
+import PaymentScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -17,9 +18,12 @@ import com.project.namu.model.SearchViewModel
 import com.project.namu.model.SignInViewModel
 import com.project.namu.mypage.MyPage
 import com.project.namu.ui.page.HomeScreen
+import com.project.namu.ui.page.MenuScreen
+import com.project.namu.ui.page.OrderDetailsScreen
 import com.project.namu.ui.page.PayComplete
 import com.project.namu.ui.page.Search_listScreen
 import com.project.namu.ui.page.StoreScreen
+import com.project.namu.ui.page.WishListScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @Composable
@@ -40,8 +44,14 @@ fun NavGraph(navController: NavHostController, startDestination: String = Screen
         composable(Screen.Signin.route) { SignIn(popUpViewModel = popUpViewModel, signInViewModel = signInViewModel, navController = navController, logInViewModel = logInViewModel) }
         composable(Screen.MyPage.route) { MyPage(MyPageViewModel = myPageViewModel, logInViewModel= logInViewModel ) }
         composable(Screen.Home.route) { HomeScreen(navController, searchViewModel) }
-        composable(Screen.Search.route) { Search_listScreen(navController, searchViewModel) }
-        composable(Screen.PayComplete.route) { PayComplete(navController)}
+        composable(Screen.Search.route) { Search_listScreen(navController,searchViewModel) }
+        composable(Screen.WishList.route) { WishListScreen(navController) }
+        composable("cart") { PaymentScreen(navController = navController) }
+        composable("paycomplete") { PayComplete(navController = navController) }
+        composable("orderdetail") { OrderDetailsScreen(navController = navController) }
+
+
+
 
         // 가게 상세 화면 (storeId를 Path 파라미터로 받아옴)
         composable(
@@ -51,5 +61,14 @@ fun NavGraph(navController: NavHostController, startDestination: String = Screen
             val storeId = backStackEntry.arguments?.getInt("storeId") ?: 0
             StoreScreen(navController = navController, storeId = storeId)
         }
+
+        composable(
+            route = "menu_detail/{menuId}",
+            arguments = listOf(navArgument("menuId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val menuId = backStackEntry.arguments?.getInt("menuId") ?: 0
+            MenuScreen(navController = navController, menuId = menuId)
+        }
+
     }
 }

@@ -24,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -42,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -52,10 +54,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.project.namu.R
 import com.project.namu.data.model.DetailMenu
 import com.project.namu.data.model.StoreDetailData
-import com.project.namu.ui.component.Store_SwitchBottomBar
+import com.project.namu.ui.component.StoreSwitchBottomBar
 import com.project.namu.ui.theme.BackGround
 import com.project.namu.ui.tools.PagerWithDotsIndicator
 import com.project.namu.ui.viewmodel.StoreDetailUiState
@@ -65,12 +68,10 @@ import com.project.namu.ui.viewmodel.StoreDetailViewModel
 fun StoreScreen(
     navController: NavController,
     storeId: Int,
-    viewModel: StoreDetailViewModel = hiltViewModel() // ✅ Hilt ViewModel로 변경
+    viewModel: StoreDetailViewModel = hiltViewModel()
 ) {
-
     val uiState by viewModel.uiState.collectAsState()
 
-    // 화면이 처음 생성되거나 storeId 바뀔 때 서버 호출
     LaunchedEffect(storeId) {
         if (storeId == 0) {
             Log.e("DEBUG", "Warning: storeId is 0 — check your data.")
@@ -81,9 +82,7 @@ fun StoreScreen(
 
     Scaffold(
         topBar = { /* ... */ },
-        bottomBar = {
-            Store_SwitchBottomBar(isAvailable = true)
-        },
+        bottomBar = { StoreSwitchBottomBar(isAvailable = true, navController) }
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             when (uiState) {
@@ -94,7 +93,7 @@ fun StoreScreen(
                 }
                 is StoreDetailUiState.Success -> {
                     val storeDetailData = (uiState as StoreDetailUiState.Success).data
-                    StoreContent(storeDetailData)
+                    StoreContent(storeDetailData, navController)  // ✅ navController 전달
                 }
                 is StoreDetailUiState.Error -> {
                     val message = (uiState as StoreDetailUiState.Error).message
@@ -108,7 +107,7 @@ fun StoreScreen(
 }
 
 @Composable
-fun StoreContent(storeDetailData: StoreDetailData) {
+fun StoreContent(storeDetailData: StoreDetailData, navController: NavController) { // ✅ navController 추가
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -116,28 +115,28 @@ fun StoreContent(storeDetailData: StoreDetailData) {
     ) {
         // 1) 사진/이미지 Pager
         item {
-            // storePictureUrls가 List<String>? 이므로 null 체크
             val images = storeDetailData.storePictureUrls ?: emptyList()
             Store_Pager(imageUrls = images)
         }
 
         // 2) 가게 기본 정보 표시
         item {
-            // storeRating이 Float이면 바로 받거나, Int라면 .toFloat() 해서 넘긴다
             Store_Detail(
                 storeName = storeDetailData.storeName,
                 storePhone = storeDetailData.storePhone,
                 pickupTimes = storeDetailData.pickupTimes,
                 storeAddress = storeDetailData.storeAddress,
-                storeRating = storeDetailData.storeRating,  // Float
+                storeRating = storeDetailData.storeRating,
                 reviewCount = storeDetailData.reviewCount
             )
         }
 
         // 3) 실제 메뉴 목록 (DetailMenu)
         items(storeDetailData.menus) { menuItem ->
-            Store_MenuDetail(menuData = menuItem)
+            Store_MenuDetail(menuData = menuItem, navController = navController) // ✅ navController 전달
         }
+        
+        item { Spacer(modifier = Modifier.height(12.dp)) }
     }
 }
 
@@ -146,7 +145,7 @@ fun Store_Pager(imageUrls: List<String>) {
     var isFavorite by remember { mutableStateOf(false) }
 
     Box {
-        // 예시: 이미지 슬라이더/페이저
+        // ✅ 이미지 슬라이더/페이저
         PagerWithDotsIndicator(
             indicatorColor = Color.White,
             pageCount = imageUrls.size
@@ -154,17 +153,18 @@ fun Store_Pager(imageUrls: List<String>) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(230.dp)
+                    .height(230.dp) // 높이 설정
             ) {
-                // Coil 예시:
-                // Image(
-                //    painter = rememberAsyncImagePainter(imageUrls[page]),
-                //    contentDescription = "가게 사진"
-                // )
+                Image(
+                    painter = rememberAsyncImagePainter(imageUrls[page]),
+                    contentDescription = "가게 사진",
+                    modifier = Modifier.fillMaxSize(), // ✅ Box 내부를 꽉 채움
+                    contentScale = ContentScale.Crop // ✅ 크롭하여 꽉 차게 표시
+                )
             }
         }
 
-        // 오른쪽 상단 아이콘(장바구니, 좋아요)
+        // 좋아요 & 장바구니 아이콘
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -172,7 +172,7 @@ fun Store_Pager(imageUrls: List<String>) {
             horizontalArrangement = Arrangement.End
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.leaves),
+                imageVector = Icons.Outlined.ShoppingCart,
                 contentDescription = "장바구니",
                 tint = Color.White,
                 modifier = Modifier
@@ -204,7 +204,7 @@ fun Store_Detail(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(170.dp)
+            .height(180.dp)
             .background(Color.White)
     ) {
         Column(
@@ -218,7 +218,7 @@ fun Store_Detail(
             ) {
                 Text(
                     text = storeName,
-                    fontSize = 24.sp,
+                    fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
@@ -231,42 +231,64 @@ fun Store_Detail(
                         imageVector = Icons.Default.Star,
                         contentDescription = "Rating",
                         tint = Color(0xFFFFD607),
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(22.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = storeRating.toString(),
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         color = Color.Black,
                         fontWeight = FontWeight.Medium
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            // 가게 전화번호
+             Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.phone),
+                        contentDescription = "phonenumber",
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = storePhone ?: "전화번호 없음",
+                        fontSize = 16.sp,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Normal,
+                    )
+                }
+
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // 영업시간
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
-                    painter = painterResource(id = R.drawable.time),
-                    contentDescription = "phonenumber",
+                    painter = painterResource(id = R.drawable.clock),
+                    contentDescription = "open-time",
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
 
                 // null이면 "정보 없음" 식으로 처리할 수도 있음
                 Text(
-                    text = storePhone ?: "전화번호 없음",
+                    text = pickupTimes,
                     fontSize = 16.sp,
                     color = Color.Black,
                     fontWeight = FontWeight.Normal,
                 )
             }
 
-// 위치
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // 위치
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
-                    painter = painterResource(id = R.drawable.map),
+                    painter = painterResource(id = R.drawable.mappin),
                     contentDescription = "location",
                     modifier = Modifier.size(18.dp)
                 )
@@ -282,36 +304,11 @@ fun Store_Detail(
         }
 
         // 리뷰 N개 버튼
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(180.dp)
-                .padding(20.dp),
-            contentAlignment = Alignment.BottomEnd
-        ) {
-            Button(
-                onClick = { /* TODO: 리뷰 목록으로 이동 */ },
-                modifier = Modifier
-                    .border(
-                        width = 1.dp,
-                        color = Color(0xFFE7E7E7),
-                        shape = RoundedCornerShape(30.dp)
-                    )
-                    .width(100.dp)
-                    .height(32.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = Color.Black
-                )
-            ) {
-                Text(text = "리뷰 ${reviewCount}+개")
-            }
-        }
     }
 }
 
 @Composable
-fun Store_MenuDetail(menuData: DetailMenu) {
+fun Store_MenuDetail(menuData: DetailMenu, navController: NavController) {
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -319,83 +316,93 @@ fun Store_MenuDetail(menuData: DetailMenu) {
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
             .padding(top = 10.dp)
-            .height(165.dp)
+            .height(180.dp)
+            .clickable {
+                navController.navigate("menu_detail/${menuData.menuId}") // ✅ menuId로 변경
+            }
     ) {
         Row(modifier = Modifier.fillMaxSize()) {
-            // 왼쪽 이미지
+            // 이미지 영역
             Box(
                 modifier = Modifier
                     .width(120.dp)
                     .fillMaxHeight()
             ) {
-                // 예) Coil
-                // Image(
-                //   painter = rememberAsyncImagePainter(menuData.menuPictureUrl),
-                //   contentDescription = null,
-                //   modifier = Modifier.fillMaxSize()
-                // )
+                Image(
+                    painter = rememberAsyncImagePainter(menuData.menuPictureUrl),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
             }
 
-            // 오른쪽 텍스트
+            // 텍스트 정보 영역
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(12.dp)
+                    .padding(vertical = 12.dp)
+                    .padding(start = 12.dp)
+
             ) {
+                // 세트 이름
                 Text(
                     text = menuData.setName,
-                    fontSize = 20.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
+                // 메뉴 구성
                 Text(
                     text = menuData.menuNames,
-                    fontSize = 16.sp,
-                    color = Color.Black
+                    fontSize = 12.sp,
+                    color = Color.Black,
+                    lineHeight = 16.sp // 원하는 줄 간격 값으로 조절
+
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
+                // 메뉴 설명
                 Text(
                     text = menuData.menuDetail,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color(0xFF8B8B8B),
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    lineHeight = 16.sp // 원하는 줄 간격 값으로 조절
+
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-                // 할인율 계산
-                val discountPercent = if (menuData.menuPrice > 0) {
-                    ((menuData.menuPrice - menuData.menuDiscountPrice).toFloat()
-                            / menuData.menuPrice * 100).toInt()
-                } else {
-                    0
-                }
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                // 가격 정보 (할인율, 할인된 가격, 원래 가격)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // 할인율 (초록색)
                     Text(
-                        text = "${discountPercent}%",
-                        fontSize = 16.sp,
+                        text = "30%",
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF4CAF50)
+                        color = Color(0xFF2DA74D) // 초록색
                     )
                     Spacer(modifier = Modifier.width(8.dp))
 
+                    // 할인된 가격 (굵은 글씨)
                     Text(
                         text = "${menuData.menuDiscountPrice}원",
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
                     )
                     Spacer(modifier = Modifier.width(8.dp))
 
+                    // 원래 가격 (취소선)
                     Text(
                         text = "${menuData.menuPrice}원",
-                        fontSize = 14.sp,
-                        color = Color(0xFF8B8B8B),
+                        fontSize = 12.sp,
+                        color = Color.Gray,
                         textDecoration = TextDecoration.LineThrough
                     )
                 }
