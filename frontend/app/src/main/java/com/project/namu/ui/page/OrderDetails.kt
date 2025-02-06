@@ -138,9 +138,9 @@ fun OrderDetailsScreen(navController: NavController) {
                                     .padding(vertical = 16.dp)
                             )
 
-                            OrderInfo2Box(title = "주문 상품", value1 = "세트 A", value2 = "총 금액 11000원")
+                            OrderInfo2Box(title = "주문 상품", value1 = "세트 A, B", value2 = "총 금액 12500원")
                             Spacer(modifier = Modifier.height(10.dp))
-                            OrderInfoBox(title = "매장명", value = "카페인중독 부산대점", showArrow = true)
+                            OrderInfoBox(title = "매장명", value = "요거피플 동래점", showArrow = true)
                             Spacer(modifier = Modifier.height(10.dp))
                             OrderInfoBox(title = "전화번호", value = "070-5566-7933", showIcon = Icons.Default.Call)
                             Spacer(modifier = Modifier.height(10.dp))

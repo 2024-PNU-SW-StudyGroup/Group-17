@@ -67,6 +67,7 @@ import com.project.namu.ui.theme.Main200
 import com.project.namu.ui.viewmodel.StoreUiState
 import com.project.namu.ui.viewmodel.StoreViewModel
 import androidx.compose.ui.platform.LocalContext  // 추가: Compose의 LocalContext 임포트
+import com.project.namu.navigation.Screen
 
 
 @Composable
@@ -240,7 +241,11 @@ fun HorizontalStoreList(title: String, navController: NavController) {
                 fontWeight = Bold,
                 color = Color.Black
             )
-            Row {
+            Row(
+                modifier = Modifier.clickable {
+                    navController.navigate(Screen.Search.route)
+                }
+            ) {
                 Text(text = "+ 더보기", fontSize = 16.sp, color = Main100)
                 Spacer(modifier = Modifier.width(8.dp))
             }
